@@ -1,0 +1,11 @@
+CREATE DATABASE synth;
+
+CREATE TABLE guildInfo (
+    guildId VARCHAR(100) NOT NULL PRIMARY KEY,
+    guildOwnerID VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE guildConfig (
+    guildID VARCHAR(100) NOT NULL PRIMARY KEY,
+    prefix VARCHAR(10) DEFAULT '!'
+);
