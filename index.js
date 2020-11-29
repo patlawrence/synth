@@ -1,21 +1,22 @@
 const fs = require('fs'); // node.js file system module
-require('dotenv').config(); // stores tokens, keys, passwords and other info
+require('dotenv').config(); // stores info
 const Discord = require('discord.js'); // links discord.js api to file
 
 const client = new Discord.Client(); // creates bot user
-client.prefixes = new Discord.Collection(); // stores server prefixes
+client.prefixes = new Discord.Collection(); // stores server prefixes for all servers bot is in
+client.colors = new Discord.Collection(); // stores all server's preferred colors
 client.commands = new Discord.Collection(); // collection is an extension of JS' map class. this one stores commands
-client.groups = new Discord.Collection(); // stores command groups
-client.games = new Discord.Collection(); // stores games looking for players
 
-var connection;
+var connection; // for database
 
-(async () => {
-	connection = await require('./database.js');
-	await client.login(process.env.TOKEN); // bot goes from offline to online
-})();
+	(async () => {
+		connection = await require('./database.js'); // links database file that creates connection to this file
+		await client.login(process.env.TOKEN); // bot goes from offline to online
+	})();
 
-
+module.exports = {
+	connection: connection
+}
 
 date = new Date();
 
@@ -24,38 +25,41 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 console.info(`[${date.toLocaleString()}] INFO | Found ${commandFiles.length} files:\n${commandFiles.join('\n')}\n-`);
 
 console.info(`[${date.toLocaleString()}] INFO | Loading commands from found files\n-`);
-for (const file of commandFiles) { // iterates through all the .js files in /commands/
+commandFiles.forEach(file => { // iterates through all the .js files in /commands/
 	const command = require(`./commands/${file}`); // grabs scripting from the command file
 	client.commands.set(command.name, command); // adds the command name and script to the names collection
-}
+});
 console.info(`[${date.toLocaleString()}] INFO | Loaded ${client.commands.size} commands\n-`);
 
 const cooldowns = new Discord.Collection(); // stores command usage cooldowns for each command
 
 client.once('ready', () => {
 	console.info(`[${date.toLocaleString()}] INFO | Querying database for prefixes\n-`);
-	client.guilds.cache.forEach(guild =>
+	client.guilds.cache.forEach(guild => {
 		connection.query(`SELECT prefix FROM guildConfig WHERE guildID = '${guild.id}'`)
-		.then(result => client.prefixes.set(guild.id, result[0][0].prefix)).catch(err => console.error(err)));
+		.then(result => client.prefixes.set(guild.id, result[0][0].prefix)).catch(err => console.error(err));
+		connection.query(`SELECT color FROM guildConfig WHERE guildID = '${guild.id}'`)
+		.then(result => client.colors.set(guild.id, result[0][0].color)).catch(err => console.error(err));
+	});
 	console.info(`[${date.toLocaleString()}] INFO | Recieved prefixes\n-`);
 	console.info(`[${date.toLocaleString()}] INFO | Ready, logged in as ${client.user.tag} (${client.user.id})\n-`);
 });
 
-client.on('guildCreate', async guild => {
+
+
+client.on('guildCreate', async guild => { // when bot joins a server
 	try {
-		await connection.query(`INSERT INTO guildInfo VALUES('${guild.id}', '${guild.ownerID}')`);
-		await connection.query(`INSERT INTO guildConfig (guildID) VALUES('${guild.id}')`);
+		await connection.query(`INSERT INTO guildInfo VALUES('${guild.id}', '${guild.ownerID}')`); // query database to add server info to database
+		await connection.query(`INSERT INTO guildConfig (guildID) VALUES('${guild.id}')`); // query database to add server info to database
 	} catch(err) {
 		console.error(err);
 	}
 });
 
-
-
-client.on('guildDelete', async guild => {
+client.on('guildDelete', async guild => { // when bot is kicked from server
 	try {
-		await connection.query(`DELETE FROM guildInfo WHERE guildID = '${guild.id}'`);
-		await connection.query(`DELETE FROM guildConfig WHERE guildID = '${guild.id}'`);
+		await connection.query(`DELETE FROM guildInfo WHERE guildID = '${guild.id}'`); // query database to delete server from table
+		await connection.query(`DELETE FROM guildConfig WHERE guildID = '${guild.id}'`); // query database to delete server from table
 	} catch(err) {
 		console.error(err);
 	}
@@ -64,9 +68,10 @@ client.on('guildDelete', async guild => {
 
 
 client.on('message', message => { // when message is sent
-		const prefix = client.prefixes.get(message.guild.id);
+	const prefix = client.prefixes.get(message.guild.id);
+	const color = client.prefixes.get(message.guild.id);
 
-	if (!message.content.startsWith(prefix) || message.author.bot) return; // message ignored if it doesn't start with prefix or is sent by bot
+	if (!message.content.startsWith(prefix) || message.author.bot || message.channel.type == 'dm') return; // message ignored if it doesn't start with prefix, is sent by bot, or if it is bot's DMs
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/); // prefix and leading/trailing spaces are removed. words separated by spaces are then shoved into array
 	const commandName = args.shift().toLowerCase(); // lowercases everything and returns the first element
@@ -77,7 +82,7 @@ client.on('message', message => { // when message is sent
 	if (command.args && !args.length) { // if command takes arguments and there are no arguments in message
 		reply = `Incorrect number of arguments`;
 		if (command.usage) reply += `: \`${prefix}${command.name} ${command.usage}\``; // improper usage of command
-		const embed = new Discord.MessageEmbed().setDescription(reply).setColor('#F8C300'); return message.channel.send(embed); // sends message to channel
+		const embed = new Discord.MessageEmbed().setTitle(reply).setColor(`${color}`); return message.channel.send(embed); // sends message to channel
 	}
 
 

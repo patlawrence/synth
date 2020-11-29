@@ -7,5 +7,6 @@ CREATE TABLE guildInfo (
 
 CREATE TABLE guildConfig (
     guildID VARCHAR(100) NOT NULL PRIMARY KEY,
-    prefix VARCHAR(10) DEFAULT '!'
+    prefix VARCHAR(10) DEFAULT '!',
+    color VARCHAR(7) DEFAULT '#FFFFFF'
 );
