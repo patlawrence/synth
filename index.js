@@ -9,14 +9,12 @@ client.commands = new Discord.Collection(); // collection is an extension of JS'
 
 var connection; // for database
 
-	(async () => {
-		connection = await require('./database.js'); // links database file that creates connection to this file
-		await client.login(process.env.TOKEN); // bot goes from offline to online
-	})();
+(async () => {
+	connection = await require('./database.js'); // links database file that creates connection to this file
+	await client.login(process.env.TOKEN); // bot goes from offline to online
+})();
 
-module.exports = {
-	connection: connection
-}
+
 
 date = new Date();
 
@@ -69,7 +67,7 @@ client.on('guildDelete', async guild => { // when bot is kicked from server
 
 client.on('message', message => { // when message is sent
 	const prefix = client.prefixes.get(message.guild.id);
-	const color = client.prefixes.get(message.guild.id);
+	const color = client.colors.get(message.guild.id);
 
 	if (!message.content.startsWith(prefix) || message.author.bot || message.channel.type == 'dm') return; // message ignored if it doesn't start with prefix, is sent by bot, or if it is bot's DMs
 
@@ -98,7 +96,7 @@ client.on('message', message => { // when message is sent
 		const expirationTime = timestamps.get(message.author.id) + cooldownAmount; // time of day cooldown expires
 		if (now < expirationTime) { // if current time is less than the cooldown expiration time
 			const timeLeft = (expirationTime - now) / 1000; // calculates time left in cooldown
-			const embed = new Discord.MessageEmbed().setTitle(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing \`${prefix}${command.name}\``).setColor('#F8C300'); return message.channel.send(embed);
+			const embed = new Discord.MessageEmbed().setTitle(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing \`${prefix}${command.name}\``).setColor(`${color}`); return message.channel.send(embed);
 		}
 	}
 
@@ -107,9 +105,9 @@ client.on('message', message => { // when message is sent
 
 	try {
 		console.log(`[${date.toLocaleString()}] LOG | ${message.author.tag}: ${message.content}`); // send log to console
-		command.execute(message, args); // run command
+		command.execute(message, args, connection); // run command
 	} catch (err) {
 		console.error(err); // send error to console
-		const embed = new Discord.MessageEmbed().setTitle(`Error executing \`${prefix}${command.name}\``).setColor('#F8C300'); message.channel.send(embed);
+		const embed = new Discord.MessageEmbed().setTitle(`Error executing \`${prefix}${command.name}\``).setColor(`${color}`); message.channel.send(embed);
 	}
 });

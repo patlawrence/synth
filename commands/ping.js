@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['p'], // using these keywords also triggers command
     cooldown: '3', // time command cannot be reused after it has been called
 
-	execute(message, args) {
+	execute(message, args, connection) {
 		const color = message.client.colors.get(message.guild.id);
 
 		embed = new Discord.MessageEmbed()

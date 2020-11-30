@@ -8,7 +8,7 @@ module.exports = {
 	usage: '[game]', // how command is supposed to be used
     cooldown: '1', // time command cannot be reused after it has been called
 
-	execute(message, args) {
+	execute(message, args, connection) {
 		const prefix = message.client.prefixes.get(message.guild.id);
 		const color = message.client.colors.get(message.guild.id);
 		const data = ['']; // array that will store the currently looked for games

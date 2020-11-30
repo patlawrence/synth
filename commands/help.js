@@ -8,7 +8,7 @@ module.exports = {
 	usage: '[command]', // how command is supposed to be used
 	cooldown: '2.5', // time command cannot be reused after it has been called
 
-	execute(message, args) {
+	execute(message, args, connection) {
 		const prefix = message.client.prefixes.get(message.guild.id);
 		const color = message.client.colors.get(message.guild.id);
 		const {commands} = message.client; // commands are equal to already defined client command collection

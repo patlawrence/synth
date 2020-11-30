@@ -9,7 +9,7 @@ module.exports = {
     cooldown: '15', // time command cannot be reused after it has been called
 	args: true, // are arguments required
 
-	execute(message, args) {
+	execute(message, args, connection) {
 		const prefix = message.client.prefixes.get(message.guild.id);
 		const color = message.client.colors.get(message.guild.id);
 		const date = new Date();
