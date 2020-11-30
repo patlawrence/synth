@@ -2,7 +2,7 @@
 
 Synth was built with ease of use in mind. Here you'll find a full list of all the quirks and features Synth has to offer.
 
-While Synth may look finished, *we still have plenty of ideas, plans, and upcoming features for Synth* so please stay tuned for those!
+While Synth may look finished, *we still have plenty of ideas, plans, and upcoming features for Synth* so please stay tuned for those! Also, if you find any issues with the bot, be sure to make a ticket in the issues section for this repository.
 
 ## Purpose
 
