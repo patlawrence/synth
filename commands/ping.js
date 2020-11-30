@@ -3,7 +3,7 @@ const Discord = require('discord.js'); // links discord.js api to file
 module.exports = {
 	name: 'ping', // command keyword
 	description: 'Pings the bot', // info about command
-	group: 'Server', // command group (not displayed in !help [command name])
+	group: 'General', // command group (not displayed in !help [command name])
     aliases: ['p'], // using these keywords also triggers command
     cooldown: '3', // time command cannot be reused after it has been called
 

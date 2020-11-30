@@ -23,7 +23,7 @@ module.exports = {
 			const embed = new Discord.MessageEmbed() // creates new embeded message
 			.setTitle('Help')
 			.setColor(`${color}`) // sets embed color to server's preferred color
-			.setDescription(`Synth is an all-purpose bot engineered to satisfy all your Discord needs\n[Click here for the full doumentation](https://google.com)\n\nUse \`${prefix}help [command name]\` for more info`);
+			.setDescription(`Synth is an all-purpose bot engineered to satisfy all your Discord needs\n[Click here for the full doumentation](https://github.com/pat-lawre/Synth)\n\nUse \`${prefix}help [command name]\` for more info`);
 
 			// data.push(commands.map(command => `\`${prefix}${command.name}\``).join(', ')); // pushes each prefix-command combo to their own element, concatenates all elements in array, and separates each entry with ', '
 			// embed.addField(`Use \`${prefix}help [command name]\` for more info`, `${data}`, true); // TODO: show command groups rather than list all commands

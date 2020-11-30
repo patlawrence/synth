@@ -3,7 +3,7 @@ const Discord = require('discord.js'); // links discord.js api to file
 module.exports = {
 	name: 'reload', // command keyword
 	description: 'Reloads a command', // info about command
-	group: 'Server', // command group (not displayed in !help [command name])
+	group: 'Debug', // command group (not displayed in !help [command name])
 	aliases: ['r'], // using these keywords also triggers command
 	usage: '[command]', // how command is supposed to be used
     cooldown: '15', // time command cannot be reused after it has been called

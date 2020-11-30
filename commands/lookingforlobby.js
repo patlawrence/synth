@@ -3,7 +3,7 @@ const Discord = require('discord.js'); // links discord.js api to file
 module.exports = {
 	name: 'lobby', // command keyword
 	description: '[WIP] Enables/Disables lobby creating functionality', // info about command
-	group: 'Fun', // command group (not displayed in !help [command name])
+	group: 'General', // command group (not displayed in !help [command name])
 	aliases: ['l', 'lfl', 'lfg'], // using these keywords also triggers command
 	usage: '[game]', // how command is supposed to be used
     cooldown: '1', // time command cannot be reused after it has been called
