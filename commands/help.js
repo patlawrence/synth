@@ -6,7 +6,7 @@ module.exports = {
 	group: 'General', // command group (not displayed in !help [command name])
 	aliases: ['h', 'commands', '?'], // using these keywords also triggers command
 	usage: '[command]', // how command is supposed to be used
-	cooldown: '2.5', // time command cannot be reused after it has been called
+	cooldown: '5', // time command cannot be reused after it has been called
 
 	execute(message, args, connection) {
 		const prefix = message.client.prefixes.get(message.guild.id);
@@ -64,7 +64,7 @@ module.exports = {
 		if (command.usage) {
 			embed.addField('Usage', `\`${prefix}${command.name} ${command.usage}\``, true);
 		}
-		embed.addField('Cooldown', `\`${command.cooldown || 3} second(s)\``, true);
+		embed.addField('Cooldown', `${command.cooldown || 3} second(s)`, true);
 
 		message.channel.send(embed);
 	}
