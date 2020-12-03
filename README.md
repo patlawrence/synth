@@ -20,13 +20,9 @@ This list is ordered by command category/group. If you're looking for a command 
 
 ### General
 
-* `help` - Displays all the available commands that come with Synth. Currently anyone can call any command listed in `help`; even commands that change the bot's settings. We're currently in the process of changing that.
+* `help` - Displays all the available commands that come with Synth. Currently anyone can call any command listed in `help`; even commands that change the bot's settings. We're currently in the process of changing that. Additionally, you can get more information about a specific command if you specify a command as an argument for help.
 
-Additionally, you can get more information about a specific command if you specify a command as an argument for help.
-
-* `ping` - This just pings the bot. The bot responds with the latency of the ping. That's all it does. You can use it if the bot is being unresponsive to check if the bot is online. If the bot doesn't respond, then it's offline.
-
-* `lobby` - *This is still under development. The command currently has no functionality* 
+* `ping` - This just pings the bot. The bot responds with the latency of the ping. That's all it does. You can use it if the bot is being unresponsive to check if the bot is online. If the bot doesn't respond, then it's offline. 
 
 ### Settings
 
