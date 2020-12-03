@@ -1,19 +1,27 @@
-const Discord = require('discord.js'); // links discord.js api to file
+const Command = require('../Classes/Command.js');
+const { MessageEmbed } = require('discord.js');
 
-module.exports = {
-	name: 'ping', // command keyword
-	description: 'Pings the bot', // info about command
-	group: 'General', // command group (not displayed in !help [command name])
-    aliases: ['p'], // using these keywords also triggers command
-    cooldown: '3', // time command cannot be reused after it has been called
+module.exports = class extends Command {
+    constructor(...args) {
+        super(...args, {
+            description: 'Pings the bot and sends back the latency',
+            group: 'General',
+            aliases: ['p'],
+            cooldown: 5,
+            args: 0
+        });
+    }
 
-	execute(message, args, connection) {
-		const color = message.client.colors.get(message.guild.id);
-
-		embed = new Discord.MessageEmbed()
-		.setColor(`${color}`) // sets embed color to server's prefered color
-		.setDescription(`Pinged at ${Date.now() - message.createdTimestamp} ms`);
-
-		return message.channel.send(embed);
-	}
+    async run(message, args) {
+        const color = this.client.colors.get(message.guild.id); // get color from the cache
+        const embed = new MessageEmbed(); // create embedded message object
+        embed
+		.setColor(`${color}`)
+        .setDescription(`Pinging...`);
+        return message.channel.send(embed)
+        .then(response => {
+            embed.setDescription(`Ping: ${response.createdTimestamp - message.createdTimestamp} ms`)
+            response.edit(embed)
+        });
+    }
 }

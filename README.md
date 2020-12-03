@@ -33,8 +33,3 @@ Additionally, you can get more information about a specific command if you speci
 * `prefix` - Changes the bot's prefix. You can use this to view the prefix by not adding arguments or to change the prefix by adding the new prefix as an argument to the command.
 
 * `color` - Every message the bot sends has a color on the embed. This command allows you to see what color the embeded messages are currently and allows you to change it. Colors must be in hexadecimal format (with the #) or else the color will be changed to black.
-
-### Debug
-**These are for dev debugging. If you see these in !help then please let us know**
-
-* `reload` - Reloads command modules. That's all.

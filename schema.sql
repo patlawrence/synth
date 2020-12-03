@@ -1,12 +1,7 @@
 CREATE DATABASE synth;
-
-CREATE TABLE guildInfo (
-    guildId VARCHAR(100) NOT NULL PRIMARY KEY,
-    guildOwnerID VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE guildConfig (
+CREATE TABLE configs (
     guildID VARCHAR(100) NOT NULL PRIMARY KEY,
+    guildOwnerID VARCHAR(100) NOT NULL,
     prefix VARCHAR(10) DEFAULT '!',
     color VARCHAR(7) DEFAULT '#FFFFFF'
 );
