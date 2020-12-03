@@ -1,33 +1,33 @@
-const Discord = require('discord.js'); // links discord.js api to file
+const Command = require('../Classes/Command.js');
+const { MessageEmbed } = require('discord.js');
 
-module.exports = {
-	name: 'prefix', // command keyword
-	description: 'Reply\'s with the current prefix for the bot and also sets a new prefix', // info about command
-	group: 'Settings', // command group (not displayed in !help [command name])
-	aliases: ['changeprefix','prefixchange', 'pc', 'cp'], // using these keywords also triggers command
-	usage: '[new prefix]', // how command is supposed to be used
-    cooldown: '25', // time command cannot be reused after it has been called
+module.exports = class extends Command {
+    constructor(...args) {
+        super(...args, {
+            description: 'Changes prefix',
+            group: 'Settings',
+            aliases: ['cp','changeprefix'],
+            usage: '[prefix]',
+            cooldown: 5,
+            args: 1
+        });
+    }
 
-    execute(message, args, connection) {
-		prefix = message.client.prefixes.get(message.guild.id);
-        color = message.client.colors.get(message.guild.id);
+    async run(message, args) {
+        var prefix = this.client.prefixes.get(message.guild.id); // get prefix from cache
+        const color = this.client.colors.get(message.guild.id); // get color from cache
+        const embed = new MessageEmbed(); // create embedded message object
+        const connection = await require('../database.js'); // create connection to database
 
-		if (!args.length) { // runs if there are no arguments in message
-			embed = new Discord.MessageEmbed()
-			.setColor(`${color}`)
-			.setTitle(`The prefix is currently \`${prefix}\``);
-			return message.channel.send(embed); // send message
-		}
-
-		connection.query(`UPDATE guildConfig SET prefix = '${args[0]}' WHERE guildID = '${message.guild.id}'`) // change the prefix in the database
-		.then(message.client.prefixes.set(message.guild.id, args[0]));  // update cache. supposed to be a .catch statement right here. was causing errors, so it was removed. may be an issue later on
-
-		prefix = message.client.prefixes.get(message.guild.id); // update color to newly set prefix
-
-		embed = new Discord.MessageEmbed()
-		.setColor(`${color}`)
-		.setTitle(`Prefix changed to \`${prefix}\``);
-
+		connection.query(`UPDATE configs SET prefix = '${args[0]}' WHERE guildID = '${message.guild.id}'`) // update prefix in database to first command argument
+		.then(message.client.prefixes.set(message.guild.id, args[0])); // update cache
+        prefix = this.client.prefixes.get(message.guild.id); // update local prefix variable
+        this.client.user.setActivity(`${prefix}help`, { // change bot activity to updated prefix
+            type: 'LISTENING'
+        });
+        embed
+        .setDescription(`Prefix changed to \`${prefix}\``)
+        .setColor(`${color}`);
 		return message.channel.send(embed);
-	}
+    }
 }
