@@ -20,14 +20,12 @@ module.exports = class extends Command {
         const connection = await require('../database.js'); // create connection to database
 
 		connection.query(`UPDATE configs SET prefix = '${args[0]}' WHERE guildID = '${message.guild.id}'`) // update prefix in database to first command argument
-		.then(message.client.prefixes.set(message.guild.id, args[0])); // update cache
+        .catch(err => console.error(err));
+        message.client.prefixes.set(message.guild.id, args[0]) // update cache
         prefix = this.client.prefixes.get(message.guild.id); // update local prefix variable
-        this.client.user.setActivity(`${prefix}help`, { // change bot activity to updated prefix
-            type: 'LISTENING'
-        });
         embed
         .setDescription(`Prefix changed to \`${prefix}\``)
-        .setColor(`${color}`);
+        .setColor(color);
 		return message.channel.send(embed);
     }
 }

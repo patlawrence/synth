@@ -37,7 +37,7 @@ module.exports = class extends Command {
 					if (command.group == group) // if command group is equal to group
 						commandsList.push(`\`${prefix}${command.name}\``) // add command to commandList
 				}).join(', '); // join all commands together with ', '
-				embed.addField(`${group}`, `${commandsList}`, true); // add a field to the embedded message with the group as a header and commandList as the text below it
+				embed.addField(group, commandsList, true); // add a field to the embedded message with the group as a header and commandList as the text below it
 				commandsList.splice(0, commandsList.length); // clear the contents of commandsList
 			});
 			return message.channel.send(embed);
@@ -48,14 +48,14 @@ module.exports = class extends Command {
 
 		if (!command) { // if command exists
 			embed
-			.setColor(`${color}`)
+			.setColor(color)
 			.setDescription(`Invalid command`);
 			return message.channel.send(embed);
 		}
 		embed
-		.setColor(`${color}`)
-		.addField(`${prefix}${command.name}`, `${command.description}`)
-		.addField('Aliases', `${command.aliases.join(', ')}`, true)
+		.setColor(color)
+		.addField(`${prefix}${command.name}`, command.description)
+		.addField('Aliases', command.aliases.join(', '), true)
 		.addField('Usage', `\`${prefix}${command.name} ${command.usage}\``, true)
 		.addField('Cooldown', `${command.cooldown || 3} second(s)`, true);
 		return message.channel.send(embed);
