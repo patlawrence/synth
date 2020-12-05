@@ -14,7 +14,7 @@ module.exports = class extends Event {
             .setColor(color);
             return message.channel.send(embed);
         }
-        if(!message.content.startsWith(prefix) || message.author.bot) return; // if message doesn't start with prefix or message is sent by bot
+        if(!message.content.startsWith(prefix) || message.author.bot) return // if message doesn't start with prefix or message is sent by bot
         const args = message.content.slice(prefix.length).trim().split(/ +/); // get arguments by separating prefix and separate eache word into a different element of the array
         const name = args.shift().toLowerCase(); // get command name from args and remove command name from array
         const command = this.client.commands.get(name) || this.client.commands.find(command => command.aliases && command.aliases.includes(name)); // get command from collection based on name or get command from collection based on command aliases

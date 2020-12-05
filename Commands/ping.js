@@ -7,7 +7,7 @@ module.exports = class extends Command {
             description: 'Pings the bot and sends back the latency',
             group: 'General',
             aliases: ['p'],
-            cooldown: 5,
+            cooldown: 1,
             args: 0
         });
     }

@@ -7,12 +7,17 @@ const { Client, Collection } = require('discord.js');
 
 module.exports = class SynthClient extends Client { // client that the bot uses
     constructor() {
-        super();
+        super( {
+			partials: ['MESSAGE', 'REACTION']
+		});
         this.commands = new Collection(); // stores all bot commands
         this.prefixes = new Collection(); // stores prefixes for each server bot is in
         this.colors = new Collection(); // stores colors for each server bot is in
-        this.cooldowns = new Collection(); // stores cooldowns based on guild
-        this.cooldowns.guilds = new Collection(); // stores cooldowns based on each time a user sends a command
+        this.cooldowns = []; // stores cooldown properties for commands
+		this.cooldowns.guilds = new Collection(); // stores cooldowns based on each time a user sends a command
+		this.highlights = []; // stores highlights properties for commands
+		this.highlights.emojis = new Collection(); // stores emojis for all guilds for highlights
+		this.highlights.channels = new Collection(); // stores highlights channels
     }
 
     login(token) { // bot goes online

@@ -8,7 +8,7 @@ module.exports = class extends Command {
             group: 'Settings',
             aliases: ['cp','changeprefix'],
             usage: '[prefix]',
-            cooldown: 5,
+            cooldown: 15,
             args: 1
         });
     }
@@ -19,7 +19,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed(); // create embedded message object
         const connection = await require('../database.js'); // create connection to database
 
-		connection.query(`UPDATE configs SET prefix = '${args[0]}' WHERE guildID = '${message.guild.id}'`) // update prefix in database to first command argument
+		connection.query(`UPDATE configs SET prefix = '${args[0]}' WHERE guildId = '${message.guild.id}'`) // update prefix in database to first command argument
         .catch(err => console.error(err));
         message.client.prefixes.set(message.guild.id, args[0]) // update cache
         prefix = this.client.prefixes.get(message.guild.id); // update local prefix variable
