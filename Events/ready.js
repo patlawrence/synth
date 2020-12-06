@@ -19,17 +19,17 @@ module.exports = class extends Event {
 
     getConfigsForCache(connection) { // gets the config for each guild and puts the data into the cache
         this.client.guilds.cache.forEach(guild => { // for each guild in guilds cache
-            connection.query(`SELECT prefix, color FROM configs WHERE guildId = '${guild.id}'`) // query database for configs
+            connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`) // query database for configs
             .then(result => {
                 if(!result[0].length) { // if database doesn't have an entry for guild
                     this.insertGuild(connection, guild);
                 } else {
                     this.client.prefixes.set(guild.id, result[0][0].prefix); // update cache
                     this.client.colors.set(guild.id, result[0][0].color); // update cache
-                    connection.query(`SELECT emoji, channel FROM highlights WHERE guildId = '${guild.id}'`)
+                    connection.query(`SELECT emoji, channelID FROM highlights WHERE guildID = '${guild.id}'`)
                     .then(result => {
                         this.client.highlights.emojis.set(guild.id, result[0][0].emoji);
-                        this.client.highlights.channels.set(guild.id, result[0][0].channel);
+                        this.client.highlights.channelIDs.set(guild.id, result[0][0].channelID);
                     }).catch(err => console.error(err));
                 }
             }).catch(err => console.error(err));
@@ -37,27 +37,27 @@ module.exports = class extends Event {
     }
 
     insertGuild(connection, guild) { // creates a new database entry for guild if guild added bot to server while bot was offline
-        connection.query(`INSERT INTO configs (guildId) VALUES('${guild.id}')`).catch(err => console.error(err)); // insert guild data into config
-        connection.query(`INSERT INTO highlights (guildId, channel) VALUES('${guild.id}', ${guild.systemChannelID})`).catch(err => console.error(err)); // insert guild data into highlights
-        connection.query(`SELECT prefix, color FROM configs WHERE guildId = '${guild.id}'`) // query database for configs
+        connection.query(`INSERT INTO configs (guildID) VALUES('${guild.id}')`).catch(err => console.error(err)); // insert guild data into config
+        connection.query(`INSERT INTO highlights (guildID, channelID) VALUES('${guild.id}', ${guild.systemChannelID})`).catch(err => console.error(err)); // insert guild data into highlights
+        connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`) // query database for configs
         .then(result => {
             this.client.prefixes.set(guild.id, result[0][0].prefix); // update cache
             this.client.colors.set(guild.id, result[0][0].color); // update cache
         }).catch(err => console.error(err));
-        connection.query(`SELECT emoji, channel FROM highlights WHERE guildId = '${guild.id}'`)
+        connection.query(`SELECT emoji, channelID FROM highlights WHERE guildID = '${guild.id}'`)
         .then(result => {
             this.client.highlights.emojis.set(guild.id, result[0][0].emoji); // update cache
-            this.client.highlights.channels.set(guild.id, result[0][0].channel); // update cache
+            this.client.highlights.channelIDs.set(guild.id, result[0][0].channelID); // update cache
         }).catch(err => console.error(err));
     }
 
     getAllConfigs(connection) { // deletes guilds that kicked bot from guild while bot was offline
-        connection.query('SELECT guildId FROM configs') // get all guilds in database
+        connection.query('SELECT guildID FROM configs') // get all guilds in database
             .then(result => {
                 for(var i = 0; i < result[0].length; i++) { // for each guild entry in result
-                    if(!this.client.guilds.cache.has(result[0][i].guildId)) {// if guild is not in client guilds cache
-                        connection.query(`DELETE FROM highlights WHERE guildId = '${result[0][i].guildId}'`).catch(err => console.error(err)); // delete guild data from highlights
-                        connection.query(`DELETE FROM configs WHERE guildId = '${result[0][i].guildId}'`).catch(err => console.error(err)); // delete guild data from configs
+                    if(!this.client.guilds.cache.has(result[0][i].guildID)) {// if guild is not in client guilds cache
+                        connection.query(`DELETE FROM highlights WHERE guildID = '${result[0][i].guildID}'`).catch(err => console.error(err)); // delete guild data from highlights
+                        connection.query(`DELETE FROM configs WHERE guildID = '${result[0][i].guildID}'`).catch(err => console.error(err)); // delete guild data from configs
                     }
                 }
             }).catch(err => console.error(err));

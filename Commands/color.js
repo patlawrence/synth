@@ -26,7 +26,7 @@ module.exports = class extends Command {
         if(!args[0].includes('#')) {
             args[0] = `#${args[0]}`;
         }
-		connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildId = '${message.guild.id}'`) // update color in database to first command arguemnt
+		connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildID = '${message.guild.id}'`) // update color in database to first command arguemnt
         .catch(err => console.error(err));
         this.client.colors.set(message.guild.id, args[0]) // update cache
         color = this.client.colors.get(message.guild.id); // update local color variable
