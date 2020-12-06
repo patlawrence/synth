@@ -42,3 +42,9 @@ This list is ordered by command category/group. If you're looking for a command 
 * `prefix` - Changes the bot's prefix. You can use this to view the prefix by not adding arguments or to change the prefix by adding the new prefix as an argument to the command.
 
 * `color` - Every message the bot sends has a color on the embed. This command allows you to see what color the embeded messages are currently and allows you to change it. Colors must be in hexadecimal format (with the #) or else the color will be changed to black.
+
+* `highlights` - Will bring up all the subcommands that relate to highlights. Currently, highlights has 2 sub commands.
+
+    * `emoji` - Allows you to change the reaction emoji that Synth monitors for highlights.
+    
+    * `channel` - Allows you to change the channel that highlights are sent in.
