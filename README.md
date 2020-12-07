@@ -1,4 +1,4 @@
-# How to use Synth
+# Synth
 
 Synth was built with ease of use in mind. Here you'll find a full list of all the quirks and features Synth has to offer.
 
