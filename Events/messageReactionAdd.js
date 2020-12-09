@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
 const emojiConverter = require('node-emoji');
-const Event = require('../Classes/Event.js');
+const Event = require('../Structures/Event.js');
+const { MessageEmbed } = require('discord.js');
 
 
 module.exports = class extends Event {
@@ -10,11 +10,12 @@ module.exports = class extends Event {
         const channelID = this.client.highlights.channelIDs.get(messageReaction.message.guild.id);
         const embed = new MessageEmbed();
 
+        console.log(messageReaction.emoji.identifier);
         if(messageReaction.message.partial) {
             const messageReaction = await messageReaction.message.fetch();
-            return this.handleEmbed(messageReaction, user, color, emoji, channelID, embed);
+            if(emojiConverter.unemojify(messageReaction.emoji.name) == emoji || ((`<:${emojiConverter.unemojify(messageReaction.emoji.name)}:${messageReaction.emoji.id}>` == emoji || `<a:${emojiConverter.unemojify(messageReaction.emoji.name)}:${messageReaction.emoji.id}>` == emoji) && this.client.emojis.cache.has(messageReaction.emoji.id))) return this.handleEmbed(messageReaction, user, color, emoji, channelID, embed);
         }
-        this.handleEmbed(messageReaction, user, color, emoji, channelID, embed);
+        if(emojiConverter.unemojify(messageReaction.emoji.name) == emoji || ((`<:${emojiConverter.unemojify(messageReaction.emoji.name)}:${messageReaction.emoji.id}>` == emoji || `<a:${emojiConverter.unemojify(messageReaction.emoji.name)}:${messageReaction.emoji.id}>` == emoji) && this.client.emojis.cache.has(messageReaction.emoji.id))) return this.handleEmbed(messageReaction, user, color, emoji, channelID, embed);
     }
 
     handleEmbed(messageReaction, user, color, emoji, channelID, embed) {
@@ -24,6 +25,7 @@ module.exports = class extends Event {
         .addField(messageReaction.message.content, `​\n${emoji} | [Jump to message](https://discordapp.com/channels/${messageReaction.message.guild.id}/${messageReaction.message.channel.id}/${messageReaction.message.id})`) // there is a zero width character before \n
         .setFooter(`${messageReaction.message.id} | #${messageReaction.message.channel.name}`)
         .setColor(color);
-        return messageReaction.message.guild.channels.cache.get(channelID).send(embed) || messageReaction.message.guild.systemChannel.send(embed);
+
+        return messageReaction.message.guild.channels.cache.get(channelID.substring(2, channelID.length - 1)).send(embed) || messageReaction.message.guild.systemChannel.send(embed);
     }
 }

@@ -10,5 +10,5 @@ CREATE TABLE highlights (
     guildID CHAR(18) NOT NULL,
     FOREIGN KEY (guildID) REFERENCES configs(guildID),
     emoji CHAR(47) DEFAULT ':heart:',
-    channelID CHAR(18) NOT NULL
+    channel CHAR(21)
 );

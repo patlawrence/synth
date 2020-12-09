@@ -1,5 +1,4 @@
-const Command = require('../../Classes/Command.js');
-const emojiConverter = require('node-emoji');
+const Command = require('../../Structures/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -8,28 +7,37 @@ module.exports = class extends Command {
             description: 'Accesses highlights configurations',
             group: 'Settings',
             aliases: ['c'],
-            usage: '[argument]',
-            cooldown: 15,
-            args: 0
+            usage: '[channel]',
+            cooldown: 15
         });
     }
 
     async run(message, args) {
+        const client = this.client;
         const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        var channel = client.getHighlightsChannel(guildID);
+        const connection = await require('../../Database/database.js');
+        const embed = new MessageEmbed();
+
         args.shift();
+
         if(!args.length) {
-            const embed = new MessageEmbed()
-            .setDescription(`Highlights channel is currently \`#${this.client.getHighlightsChannelID(guildID)}\``)
-            .setColor(this.client.getColor(guildID));
+            embed.setDescription(`Highlights channel is currently ${channel}`)
+            .setColor(color);
+
             return message.channel.send(embed);
         }
-        connection.query(`UPDATE highlights SET channelID = '${args[0].id}' WHERE guildID = '${message.guild.id}'`) // update color in database to first command arguemnt
+
+        connection.query(`UPDATE highlights SET channel = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
         .catch(err => console.error(err));
-        this.client.setHighlightsChannelID(guildID, args[0]) // update cache
-        channelID = this.client.getHighlightsChannelID(guildID); // update local color variable
-        const embed = new MessageEmbed()
-        .setDescription(`Highlights channel changed to \`<#${message.guild.channels.cache.get(channelID).name}\``)
+
+        client.setHighlightsChannel(guildID, args[0]) // update cache
+        channel = client.getHighlightsChannel(guildID); // update local color variable
+
+        embed.setDescription(`Highlights channel changed to ${channel}`)
         .setColor(color);
+        
 		return message.channel.send(embed);
     }
 }

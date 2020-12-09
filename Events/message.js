@@ -1,12 +1,11 @@
-const { Collection, MessageEmbed } = require('discord.js');
-const Event = require('../Classes/Event.js');
+const Event = require('../Structures/Event.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Event {
     async run(message) {
         const client = this.client;
-        const channel = message.channel;
 
-        if(this.isDM(message)) return channel.send('I\'m not built to respond to messages in DMs. Please talk to me in a server that we\'re both in'); // if message is sent in a DM and message isn't sent by bot
+        if(this.isDM(message)) return message.channel.send('I\'m not built to respond to messages in DMs. Please talk to me in a server that we\'re both in'); // if message is sent in a DM and message isn't sent by bot
 
         if(this.isBotTagged(message.content)) return this.replyCurrentPrefix(message); // if message starts with bot tag
 
@@ -84,11 +83,11 @@ module.exports = class extends Event {
         const prefix = client.getPrefix(guildID);
         const color = client.getColor(guildID);
         const channel = message.channel;
+        const embed = new MessageEmbed();
 
-        const embed = new MessageEmbed()
-        .setDescription(`My prefix is currently set to \`${prefix}\``)
+        embed.setDescription(`My prefix is currently set to \`${prefix}\``)
         .setColor(color);
 
-            return channel.send(embed);
+        return channel.send(embed);
     }
 }

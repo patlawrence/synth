@@ -1,27 +1,28 @@
-const Command = require('../Classes/Command.js');
+const Command = require('../Structures/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             description: 'Pings the bot and sends back the latency',
-            group: 'General',
             aliases: ['p'],
-            cooldown: 1,
-            args: 0
+            cooldown: 3
         });
     }
 
     async run(message, args) {
-        const color = this.client.colors.get(message.guild.id); // get color from the cache
+        const client = this.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID); // get color from the cache
         const embed = new MessageEmbed(); // create embedded message object
-        embed
-		.setColor(`${color}`)
-        .setDescription(`Pinging...`);
+        
+        embed.setDescription(`Pinging...`)
+        .setColor(`${color}`);
+
         return message.channel.send(embed)
-        .then(response => {
-            embed.setDescription(`Ping: ${response.createdTimestamp - message.createdTimestamp} ms`)
-            response.edit(embed)
+        .then(reply => {
+            embed.setDescription(`Ping: ${reply.createdTimestamp - message.createdTimestamp} ms`);
+            reply.edit(embed);
         });
     }
 }

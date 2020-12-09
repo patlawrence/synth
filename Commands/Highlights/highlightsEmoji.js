@@ -1,5 +1,5 @@
-const Command = require('../../Classes/Command.js');
 const emojiConverter = require('node-emoji');
+const Command = require('../../Structures/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -8,29 +8,37 @@ module.exports = class extends Command {
             description: 'Accesses highlights configurations',
             group: 'Settings',
             aliases: ['e'],
-            usage: '[argument]',
-            cooldown: 15,
-            args: 0
+            usage: '[emoji]',
+            cooldown: 15
         });
     }
 
     async run(message, args) {
+        const client = this.client;
         const guildID = message.guild.id;
-        var emoji = this.client.getHighlightsEmoji(guildID);
+        const color = client.getColor(guildID);
+        var emoji = client.getHighlightsEmoji(guildID);
+        const connection = await require('../../Database/database.js');
+        const embed = new MessageEmbed();
+
         args.shift();
+
         if(!args.length) { // if command doesn't have arguments
-            const embed = new MessageEmbed()
-            .setDescription(`Highlights emoji is currently \`${emojiConverter.emojify(emoji)}\``)
-            .setColor(this.client.getColor(guildID))
+            embed.setDescription(`Highlights emoji is currently ${emoji}`)
+            .setColor(color);
+
             return message.channel.send(embed);
         }
-        connection.query(`UPDATE highlights SET emoji = '${emojiConverter.unemojify(args[0])}' WHERE guildID = '${message.guild.id}'`) // update color in database to first command arguemnt
+
+        connection.query(`UPDATE highlights SET emoji = '${emojiConverter.unemojify(args[0])}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
         .catch(err => console.error(err));
-        this.client.setHighlightsEmoji(guildID, args[0]) // update cache
-        emoji = this.client.getHighlightsEmoji(message.guild.id); // update local color variable
-        const embed = new MessageEmbed()
-        .setDescription(`Highlights emoji changed to \`${emojiConverter.emojify(emoji)}\``)
+
+        client.setHighlightsEmoji(guildID, args[0]); // update cache
+        emoji = this.client.getHighlightsEmoji(guildID); // update local color variable
+
+        embed.setDescription(`Highlights emoji changed to ${emoji}`)
         .setColor(color);
+
 		return message.channel.send(embed);
     }
 }

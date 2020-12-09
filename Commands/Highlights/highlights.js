@@ -1,5 +1,4 @@
-const Command = require('../../Classes/Command.js');
-const emojiConverter = require('node-emoji');
+const Command = require('../../Structures/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -8,25 +7,25 @@ module.exports = class extends Command {
             description: 'Accesses highlights configurations',
             group: 'Settings',
             aliases: ['hl', 'top-messages', 'best-messages'],
-            usage: '[argument]',
-            cooldown: 3,
-            args: 0
+            usage: '[argument]'
         });
     }
 
     async run(message, args) {
         const client = this.client;
         const guildID = message.guild.id;
+        const prefix = client.getPrefix(guildID);
         const color = client.getColor(guildID); // get color from cache
+        const embed = new MessageEmbed();
 
-        const embed = new MessageEmbed()
-        .setTitle('Highlights')
-        .setDescription('Here are all the settings you can currently edit in highlights')
+        embed.setTitle('Highlights')
+        .setDescription(`Here are all the settings you can currently edit in ${this.name}`)
         .setColor(color);
 
-        console.log(client.getCommands('', this.name));
-        embed.addField('!highlights channel', 'Updates the channel highlights will be sent in', true)
-        .addField('!highlights emoji', 'Updates the reaction emoji that is used to put a message in the highlights channel', true);
+        client.commands.forEach(command => {
+            if(command.name.startsWith(`${this.name} `))
+                embed.addField(`${prefix}${command.name}`, command.description, true);
+        });
 
         return message.channel.send(embed);
     }

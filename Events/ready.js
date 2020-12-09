@@ -1,4 +1,4 @@
-const Event = require('../Classes/Event.js');
+const Event = require('../Structures/Event.js');
 
 module.exports = class extends Event {
     constructor(...args) {
@@ -8,7 +8,7 @@ module.exports = class extends Event {
     }
 
     async run() {
-        const connection = await require('../database.js'); // create database connection
+        const connection = await require('../Database/database.js'); // create database connection
         this.getConfigsForCache(connection);
         this.getAllConfigs(connection);
         this.client.user.setActivity('commands', { // change bot status
@@ -38,7 +38,7 @@ module.exports = class extends Event {
 
     insertGuild(connection, guild) { // creates a new database entry for guild if guild added bot to server while bot was offline
         connection.query(`INSERT INTO configs (guildID) VALUES('${guild.id}')`).catch(err => console.error(err)); // insert guild data into config
-        connection.query(`INSERT INTO highlights (guildID, channelID) VALUES('${guild.id}', ${guild.systemChannelID})`).catch(err => console.error(err)); // insert guild data into highlights
+        connection.query(`INSERT INTO highlights (guildID) VALUES('${guild.id}')`).catch(err => console.error(err)); // insert guild data into highlights
         connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`) // query database for configs
         .then(result => {
             this.client.prefixes.set(guild.id, result[0][0].prefix); // update cache

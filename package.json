@@ -9,7 +9,7 @@
     "start": "nodemon ./index.js"
   },
   "author": "Patrick Lawrence",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
