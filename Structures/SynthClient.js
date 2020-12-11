@@ -29,6 +29,7 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 			return commands.find(command => 
 				command.name.startsWith(`${beginningOfName} `) && command.aliases && command.aliases.includes(name)); // get command from collection based on name or get command from collection based on command aliases
 		}
+
 		return commands.get(name) || commands.find(command => !command.name.includes(' ') && command.aliases && command.aliases.includes(name));
 	}
 
@@ -55,7 +56,8 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 
         var args = content.slice(prefix.length);
 
-        if(!args) return [''];
+		if(!args)
+			return [''];
 
 		args = args.trim();
 
@@ -68,9 +70,7 @@ module.exports = class SynthClient extends Client { // client that the bot uses
         super.login(token);
     }
 
-	get directory() { // just a get function for the directory these files are in
-		return `${path.dirname(require.main.filename)}${path.sep}`;
-	}
+	get directory() { return `${path.dirname(require.main.filename)}${path.sep}`; }
 
     isClass(file) {
 		return typeof file === 'function' &&
@@ -93,13 +93,16 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 					}
 				}
 
-				if(!adjustedName) adjustedName = name;
+				if(!adjustedName)
+					adjustedName = name;
 
-				if(!this.isClass(file)) throw new TypeError(`Command ${name} doesn't export a class`); // check if file is a class
+				if(!this.isClass(file))
+					throw new TypeError(`Command ${name} doesn't export a class`); // check if file is a class
 				
 				const command = new file(this, adjustedName); // create command object
 
-				if(!(command instanceof Command)) throw new TypeError(`Command ${name} doesn't belong in Commands`); // if file doesn't extend Command throw error
+				if(!(command instanceof Command))
+					throw new TypeError(`Command ${name} doesn't belong in Commands`); // if file doesn't extend Command throw error
 
 				this.setCommand(adjustedName, command); // put command into commands collection
 			}
@@ -113,11 +116,13 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 				const { name } = path.parse(eventFile); // get event name from eventFile
 				const file = require(eventFile); // grabbing logic from eventFile
 
-				if(!this.isClass(file)) throw new TypeError(`Event ${name} doesn't export a class`); // check if File is a class
+				if(!this.isClass(file))
+					throw new TypeError(`Event ${name} doesn't export a class`); // check if File is a class
 
 				const event = new file(this, name); // create event object
 
-				if(!(event instanceof Event)) throw new TypeError(`Event ${name} doesn't belong in Events`); // if file doesn't extend Event throw error
+				if(!(event instanceof Event))
+					throw new TypeError(`Event ${name} doesn't belong in Events`); // if file doesn't extend Event throw error
 
 				event.emitter[event.type](name, (...args) => event.run(...args)); // attach a listener to the event
 			}

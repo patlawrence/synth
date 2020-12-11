@@ -1,10 +1,11 @@
 const Command = require('../../Structures/Command.js');
+const Reply = require('../../Structures/Reply.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            description: 'Accesses highlights configurations',
+            description: 'Changes the channel used for highlights',
             group: 'Settings',
             aliases: ['c'],
             usage: '[channel]',
@@ -28,6 +29,9 @@ module.exports = class extends Command {
 
             return message.channel.send(embed);
         }
+
+        if(!(/<#\d{18}>/.test(args[0])))
+            return new Reply().channelMustBeTag(message);
 
         connection.query(`UPDATE highlights SET channel = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
         .catch(err => console.error(err));

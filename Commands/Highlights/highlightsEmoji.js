@@ -1,11 +1,11 @@
-const emojiConverter = require('node-emoji');
 const Command = require('../../Structures/Command.js');
+const Reply = require('../../Structures/Reply.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            description: 'Accesses highlights configurations',
+            description: 'Changes the emoji used for highlights',
             group: 'Settings',
             aliases: ['e'],
             usage: '[emoji]',
@@ -30,8 +30,12 @@ module.exports = class extends Command {
             return message.channel.send(embed);
         }
 
-        connection.query(`UPDATE highlights SET emoji = '${emojiConverter.unemojify(args[0])}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
+        if(!(args[0].length != 2 || /<:\w{1,24}:\d{18}>/.test(args[0]) || /<a:\w{1,24}:\d{18}>/.test(args[0])))
+           return new Reply().emojiMustBeEmoji(message);
+        
+        connection.query(`UPDATE highlights SET emoji = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
         .catch(err => console.error(err));
+
 
         client.setHighlightsEmoji(guildID, args[0]); // update cache
         emoji = this.client.getHighlightsEmoji(guildID); // update local color variable

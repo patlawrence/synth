@@ -17,7 +17,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed(); // create embedded message object
         
         embed.setDescription(`Pinging...`)
-        .setColor(`${color}`);
+        .setColor(color);
 
         return message.channel.send(embed)
         .then(reply => {

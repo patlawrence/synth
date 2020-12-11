@@ -5,4 +5,5 @@ module.exports = mySQL.createConnection({ // automatically creates a connection 
     user: process.env.USER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
+    charset: 'utf8mb4_unicode_ci'
 });

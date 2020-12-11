@@ -1,8 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 
 module.exports = class Reply {
-    WaitBeforeReuse(message, command) {
-        const client = this.client;
+    waitBeforeReuse(message, command) {
+        const client = message.client;
         const guildID = message.guild.id;
         const authorID = message.author.id;
         const color = client.getColor(guildID);
@@ -19,15 +19,15 @@ module.exports = class Reply {
             const timeLeft = (expirationTime - timeRightNow); // calculate time left and convert to seconds
             const timeLeftInSeconds = timeLeft / 1000;
 
-            embed.setDescription(`Please wait ${timeLeftInSeconds.toFixed(2)} more second(s) before reusing \`${message.content}\``)
+            embed.setDescription(`Please wait ${timeLeftInSeconds.toFixed(2)} more second(s) before reusing ${message.content}`)
             .setColor(color);
             
             return message.channel.send(embed);
         }
     }
 
-    IncorrectNumberOfArgs(message, command) {
-        const client = this.client;
+    incorrectNumberOfArgs(message, command) {
+        const client = message.client;
         const guildID = message.guild.id;
         const prefix = client.getPrefix(guildID);
         const color = client.getColor(guildID);
@@ -35,7 +35,7 @@ module.exports = class Reply {
 
 		var description = 'Incorrect number of arguments';
 
-		if (command.usage) description += `\nUsage: \`${prefix}${command.name} ${command.usage}\``; // if command has usage data
+		if (command.usage) description += `\nUsage: ${prefix}${command.name} ${command.usage}`; // if command has usage data
 
 		embed.setDescription(description)
 		.setColor(color);
@@ -43,51 +43,73 @@ module.exports = class Reply {
 		return message.channel.send(embed);
     }
 
-    DoNotUnderstand(message) {
-        const client = this.client;
+    doNotUnderstand(message) {
+        const client = message.client;
         const guildID = message.guild.id;
 		const color = client.getColor(guildID);
 		const embed = new MessageEmbed();
 
-        embed.setDescription(`I don't know what you mean by \`${message.content}\``)
+        embed.setDescription(`I don't know what you mean by ${message.content}`)
 		.setColor(color);
 		
         return message.channel.send(embed);
     }
 
-    ErrorRunning(message) {
-        const client = this.client;
+    errorRunning(message) {
+        const client = message.client;
         const guildID = message.guild.id;
 		const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setDescription(`Error running \`${message.content}\``)
+        embed.setDescription(`Error running ${message.content}`)
 		.setColor(color);
 		
         return message.channel.send(embed);
     }
 
-    
-
     prefixTooLong(message) {
-        const client = this.client;
+        const client = message.client;
         const guildID = message.guild.id;
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setDescription('Prefix must be shorter than 10 characters')
+        embed.setDescription('Prefix must be shorter than 23 characters')
         .setColor(color);
 
         return message.channel.send(embed);
     }
 
     colorMustBeHexCode(message) {
-        const client = this.client;
+        const client = message.client;
         const guildID = message.guild.id;
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
         embed.setDescription('Color must be a hex code value')
+        .setColor(color);
+
+        return message.channel.send(embed);
+    }
+
+    channelMustBeTag(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('Highlights channel must be a channel tag')
+        .setColor(color);
+
+        return message.channel.send(embed);
+    }
+
+    emojiMustBeEmoji(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('Highlights emoji must be an emoji')
         .setColor(color);
 
         return message.channel.send(embed);

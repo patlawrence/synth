@@ -16,22 +16,24 @@ module.exports = class extends Command {
 
     async run(message, args) {
         const client = this.client;
-        const guildID = message.guildID;
+        const guildID = message.guild.id;
         var prefix = client.getPrefix(guildID); // get prefix from cache
         const color = client.getColor(guildID); // get color from cache
-        const connection = await require('../database.js'); // create connection to database
+        const connection = await require('../Database/database.js'); // create connection to database
         const embed = new MessageEmbed(); // create embedded message object
 
-        if(args[0].length > 10)
+        args = args.join(' ');
+
+        if(args.length > 22)
             return new Reply().prefixTooLong(message);
 
-		connection.query(`UPDATE configs SET prefix = '${args[0]}' WHERE guildID = '${guildID}'`) // update prefix in database to first command argument
+		connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`) // update prefix in database to first command argument
         .catch(err => console.error(err));
 
-        client.setPrefix(guildID, args[0]) // update cache
+        client.setPrefix(guildID, args) // update cache
         prefix = client.getPrefix(guildID); // update local prefix variable
 
-        embed.setDescription(`Prefix changed to \`${prefix}\``)
+        embed.setDescription(`Prefix changed to ${prefix}`)
         .setColor(color);
 
 		return message.channel.send(embed);

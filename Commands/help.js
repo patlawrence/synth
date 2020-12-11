@@ -25,7 +25,7 @@ module.exports = class extends Command {
 			.setDescription([
 				'Synth is an all-purpose bot engineered to satisfy all your Discord needs',
 				'[Click here for the full doumentation](https://github.com/pat-lawre/Synth)\n',
-				`Use \`${prefix}${this.name} ${this.usage}\` for more info`
+				`Use ${prefix}${this.name} ${this.usage} for more info`
 			].join('\n'));
 
 			const groups = []; // array that holds command groups
@@ -40,7 +40,7 @@ module.exports = class extends Command {
 			groups.forEach(group => { // for each group in groups
 				commands.map(command => { // apply logic to each command in commands
 					if(command.group == group && !command.name.includes(' ')) // if command group is equal to group
-						commandsList.push(`\`${prefix}${command.name}\``) // add command to commandList
+						commandsList.push(`${prefix}${command.name}`) // add command to commandList
 				}).join(', '); // join all commands together with ', '
 
 				embed.addField(group, commandsList, true); // add a field to the embedded message with the group as a header and commandList as the text below it
@@ -53,10 +53,8 @@ module.exports = class extends Command {
 
 		var command = client.getCommand(args[0]);
 
-		if(!command) {
-			var commandName = client.getCommandString(message);
-			return client.replyDoNotUnderstandCommand(message, commandName);
-		}
+		if(!command)
+			return new Reply().doNotUnderstand(message);
 
 		var testCommand;
 		var beginningOfName = `${command.name}`;
@@ -78,7 +76,7 @@ module.exports = class extends Command {
 			embed.addField('Aliases', command.aliases.join(', '), true);
 
 		if(command.usage)
-			embed.addField('Usage', `\`${prefix}${command.name} ${command.usage}\``, true);
+			embed.addField('Usage', `${prefix}${command.name} ${command.usage}`, true);
 		
 		embed.addField('Cooldown', `${command.cooldown || 3} second(s)`, true);
 

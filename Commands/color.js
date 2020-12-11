@@ -17,11 +17,11 @@ module.exports = class extends Command {
         const client = this.client;
         const guildID = message.guild.id;
         var color = client.getColor(guildID); // get color from cache
-        const connection = await require('../database.js'); // create connection to database
+        const connection = await require('../Database/database.js'); // create connection to database
         const embed = new MessageEmbed(); // create embeded message object
 
 		if(!args.length) { // if command doesn't have arguments
-            embed.setDescription(`Embed message color is currently \`${color}\``)
+            embed.setDescription(`Embed message color is currently ${color}`)
             .setColor(color);
             
 			return message.channel.send(embed);
@@ -39,7 +39,7 @@ module.exports = class extends Command {
         client.setColor(guildID, args[0]); // update cache
         color = client.getColor(guildID); // update local color variable
 
-        embed.setDescription(`Embed message color changed to \`${color}\``)
+        embed.setDescription(`Embed message color changed to ${color}`)
         .setColor(color);
         
 		return message.channel.send(embed);
