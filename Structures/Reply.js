@@ -9,10 +9,11 @@ module.exports = class Reply {
         const guilds = client.cooldowns.guilds;
         const guild = guilds.get(guildID);
 		const users = guild.get(command.name);
-		const messageCreatedTimestamp = users.get(authorID);
-		const cooldownInMS = command.cooldown * 1000;
-		const expirationTime = messageCreatedTimestamp + cooldownInMS; // calculate what time in the future the cooldown expires
         const embed = new MessageEmbed();
+
+        const messageCreatedTimestamp = users.get(authorID);
+        const cooldownInMS = command.cooldown * 1000;
+        const expirationTime = messageCreatedTimestamp + cooldownInMS; // calculate what time in the future the cooldown expires
         
         if(Date.now() <= expirationTime) { // if right now is less than or equal to time when cooldown expires
             const timeRightNow = Date.now();
@@ -73,7 +74,7 @@ module.exports = class Reply {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setDescription('Prefix must be shorter than 23 characters')
+        embed.setDescription('Prefix must be shorter than 47 characters')
         .setColor(color);
 
         return message.channel.send(embed);

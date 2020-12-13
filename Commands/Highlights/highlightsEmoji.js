@@ -30,7 +30,10 @@ module.exports = class extends Command {
             return message.channel.send(embed);
         }
 
-        if(!(args[0].length != 2 || /<:\w{1,24}:\d{18}>/.test(args[0]) || /<a:\w{1,24}:\d{18}>/.test(args[0])))
+        const guildEmoji = /<:\w{1,24}:\d{18}>/;
+        const animatedGuildEmoji = /<a:\w{1,24}:\d{18}>/;
+
+        if(!(args[0].length == 2 || guildEmoji.test(args[0]) || animatedGuildEmoji.test(args[0])))
            return new Reply().emojiMustBeEmoji(message);
         
         connection.query(`UPDATE highlights SET emoji = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt

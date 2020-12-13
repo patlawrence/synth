@@ -18,8 +18,6 @@ module.exports = class extends Event {
         const animatedGuildEmoji = `<a:${reactionEmoji.name}:${reactionEmoji.id}>`;
 
         if(reactionEmoji.name == emoji || guildEmoji == emoji || animatedGuildEmoji == emoji) {
-            if(messageReaction.count < 3)
-                return;
             const channelID = channel.substring(2, channel.length - 1);
             const channelObject = channels.cache.get(channelID);
             const fetchedMessages = await channelObject.messages.fetch({
@@ -31,6 +29,9 @@ module.exports = class extends Event {
                 (msg.embeds[0].footer.text.startsWith(message.id) ? true : false) : false);
 
             if(highlightsMessage) {
+                if(messageReaction.count < 3)
+                    return highlightsMessage.delete();
+
                 embed.setAuthor(`@${message.author.tag}`)
                 .setThumbnail(message.author.displayAvatarURL())
                 .addField(message.content, `​\n${messageReaction.count} ${emoji} | [Jump](https://discordapp.com/channels/${guildID}/${message.channel.id}/${message.id})`, true)
@@ -40,15 +41,6 @@ module.exports = class extends Event {
 
                 return highlightsMessage.edit(embed);
             }
-
-            embed.setAuthor(`@${message.author.tag}`)
-            .setThumbnail(message.author.displayAvatarURL())
-            .addField(message.content, `​\n${messageReaction.count} ${emoji} | [Jump](https://discordapp.com/channels/${guildID}/${message.channel.id}/${message.id})`, true) // there is a zero width character before \n
-            .setFooter(`${message.id} | #${message.channel.name}`)
-            .setTimestamp(message.createdTimestamp)
-            .setColor(color);
-
-            return channelObject.send(embed);
         }
     }
 }

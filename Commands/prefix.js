@@ -24,7 +24,7 @@ module.exports = class extends Command {
 
         args = args.join(' ');
 
-        if(args.length > 22)
+        if(args.length > 47)
             return new Reply().prefixTooLong(message);
 
 		connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`) // update prefix in database to first command argument

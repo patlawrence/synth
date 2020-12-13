@@ -30,7 +30,9 @@ module.exports = class extends Command {
             return message.channel.send(embed);
         }
 
-        if(!(/<#\d{18}>/.test(args[0])))
+        const channelTag = /<#\d{18}>/;
+
+        if(!(channelTag.test(args[0])))
             return new Reply().channelMustBeTag(message);
 
         connection.query(`UPDATE highlights SET channel = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt

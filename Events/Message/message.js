@@ -39,10 +39,10 @@ module.exports = class extends Event {
 			return new Reply().doNotUnderstand(message);
 
 		var testCommand;
-		var beginningOfName = `${command.name}`;
+		var beginningOfName = command.name;
 
 		for(var i = 0; i < args.length; i++) {
-			testCommand = client.getCommand(args[i], beginningOfName);
+            testCommand = client.getCommand(args[i], beginningOfName);
 
             if(!testCommand)
                 break;
@@ -50,9 +50,6 @@ module.exports = class extends Event {
 			command = testCommand;
 			beginningOfName += ` ${command.name}`;
 		}
-
-        if(!command)
-            return new Reply().doNotUnderstand(message);
         
         if(command.args > args.length)
             return new Reply().incorrectNumberOfArgs(message, command); // if command's required arguments is greater than the arguments provided

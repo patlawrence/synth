@@ -7,9 +7,7 @@ const { Client, Collection } = require('discord.js');
 
 module.exports = class SynthClient extends Client { // client that the bot uses
     constructor() {
-        super( {
-			partials: ['MESSAGE', 'REACTION']
-		});
+        super();
         this.commands = new Collection(); // stores all bot commands
         this.prefixes = new Collection(); // stores prefixes for each server bot is in
         this.colors = new Collection(); // stores colors for each server bot is in
@@ -25,10 +23,8 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 
 		name = name.toLowerCase();
 
-		if(typeof beginningOfName != 'undefined') {
-			return commands.find(command => 
-				command.name.startsWith(`${beginningOfName} `) && command.aliases && command.aliases.includes(name)); // get command from collection based on name or get command from collection based on command aliases
-		}
+		if(typeof beginningOfName != 'undefined')
+			return commands.find(command => command.name == `${beginningOfName} ${name}` || command.name.startsWith(`${beginningOfName} `) && command.aliases && command.aliases.includes(name)); // get command from collection based on name or get command from collection based on command aliases
 
 		return commands.get(name) || commands.find(command => !command.name.includes(' ') && command.aliases && command.aliases.includes(name));
 	}
