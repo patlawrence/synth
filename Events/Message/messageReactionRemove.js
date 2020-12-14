@@ -10,6 +10,7 @@ module.exports = class extends Event {
         const color = client.getColor(guildID);
         const emoji = client.getHighlightsEmoji(guildID);
         const channel = client.getHighlightsChannel(guildID);
+        const reactionsNeeded = client.getHighlightsReactionsNeeded(guildID);
         const channels = message.guild.channels;
         const embed = new MessageEmbed();
 
@@ -29,7 +30,7 @@ module.exports = class extends Event {
                 (msg.embeds[0].footer.text.startsWith(message.id) ? true : false) : false);
 
             if(highlightsMessage) {
-                if(messageReaction.count < 3)
+                if(messageReaction.count < reactionsNeeded)
                     return highlightsMessage.delete();
 
                 embed.setAuthor(`@${message.author.tag}`)

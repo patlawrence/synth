@@ -43,9 +43,11 @@ module.exports = class extends Event {
                     .then(result => {
                         const emoji = result[0][0].emoji;
                         const channel = result[0][0].channel;
+                        const reactionsNeeded = result[0][0].reactionsNeeded;
 
                         client.setHighlightsEmoji(guild.id, emoji);
                         client.setHighlightsChannel(guild.id, channel);
+                        client.setHighlightsReactionsNeeded(guild.id, reactionsNeeded);
                     }).catch(err => console.error(err));
                 }
             }).catch(err => console.error(err));
@@ -54,11 +56,15 @@ module.exports = class extends Event {
 
     addGuild(connection, guildID) { // creates a new database entry for guild if guild added bot to server while bot was offline
         const client = this.client;
+        const guilds = client.guilds;
+        const guild = guilds.cache.get(guildID);
 
         connection.query(`INSERT INTO configs (guildID) VALUES('${guildID}')`)
         .catch(err => console.error(err)); // insert guild data into config
 
-        connection.query(`INSERT INTO highlights (guildID) VALUES('${guildID}')`)
+        const systemChannelID = `<#${guild.systemChannelID}>`;
+
+        connection.query(`INSERT INTO highlights (guildID, emoji, channel) VALUES('${guildID}', '❤️', '${systemChannelID}')`)
         .catch(err => console.error(err)); // insert guild data into highlights
 
         connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guildID}'`) // query database for configs
@@ -74,9 +80,11 @@ module.exports = class extends Event {
         .then(result => {
             const emoji = result[0][0].emoji;
             const channel = result[0][0].channel;
+            const reactionsNeeded = result[0][0].reactionsNeeded;
 
             client.setHighlightsEmoji(guildID, emoji); // update cache
             client.setHighlightsChannel(guildID, channel); // update cache
+            client.setHighlightsReactionsNeeded(guildID, reactionsNeeded);
         }).catch(err => console.error(err));
     }
 

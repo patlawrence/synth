@@ -16,6 +16,7 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 		this.highlights = []; // stores highlights properties for commands
 		this.highlights.emojis = new Collection(); // stores emojis for all guilds for highlights
 		this.highlights.channels = new Collection(); // stores highlights channel IDs
+		this.highlights.reactionsNeeded = new Collection();
 	}
 
 	getCommand(name, beginningOfName) {
@@ -33,17 +34,20 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 	getColor(guildID) { return this.colors.get(guildID); }
 	getHighlightsEmoji(guildID) { return this.highlights.emojis.get(guildID); }
 	getHighlightsChannel(guildID) {return this.highlights.channels.get(guildID); }
+	getHighlightsReactionsNeeded(guildID) {return this.highlights.reactionsNeeded.get(guildID); }
 
 	setCommand(name, command) { this.commands.set(name, command); }
 	setPrefix(guildID, prefix) { this.prefixes.set(guildID, prefix); }
 	setColor(guildID, color) { this.colors.set(guildID, color); }
 	setHighlightsEmoji(guildID, emoji) { this.highlights.emojis.set(guildID, emoji); }
 	setHighlightsChannel(guildID, channel) { this.highlights.channels.set(guildID, channel); }
+	setHighlightsReactionsNeeded(guildID, reactionsNeeded) { this.highlights.reactionsNeeded.set(guildID, reactionsNeeded) }
 
-	deletePrefix(guildID) {this.prefixes.delete(guildID); }
-	deleteColor(guildID) {this.colors.delete(guildID); }
-	deleteHighlightsEmoji(guildID) {this.emojis.delete(guildID); }
-	deleteHighlightsChannel(guildID) {this.channels.delete(guildID); }
+	deletePrefix(guildID) { this.prefixes.delete(guildID); }
+	deleteColor(guildID) { this.colors.delete(guildID); }
+	deleteHighlightsEmoji(guildID) { this.highlights.emojis.delete(guildID); }
+	deleteHighlightsChannel(guildID) { this.highlights.channels.delete(guildID); }
+	deleteHighlightsReactionsNeeded(guildID) { this.highlights.reactionsNeeded.delete(guildID); }
 
 	getCommandString(message) {
         const guildID = message.guild.id;

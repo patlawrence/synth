@@ -10,6 +10,7 @@ module.exports = class extends Event {
         const color = client.getColor(guildID);
         const emoji = client.getHighlightsEmoji(guildID);
         const channel = client.getHighlightsChannel(guildID);
+        const reactionsNeeded = client.getHighlightsReactionsNeeded(guildID);
         const channels = message.guild.channels;
         const embed = new MessageEmbed();
 
@@ -18,7 +19,7 @@ module.exports = class extends Event {
         const animatedGuildEmoji = `<a:${reactionEmoji.name}:${reactionEmoji.id}>`;
 
         if(reactionEmoji.name == emoji || guildEmoji == emoji || animatedGuildEmoji == emoji) {
-            if(messageReaction.count < 3)
+            if(messageReaction.count < reactionsNeeded)
                 return;
             const channelID = channel.substring(2, channel.length - 1);
             const channelObject = channels.cache.get(channelID);
