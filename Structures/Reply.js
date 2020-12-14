@@ -115,4 +115,16 @@ module.exports = class Reply {
 
         return message.channel.send(embed);
     }
+
+    reactionsNeededNotInRange(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('Reactions needed must be between 0 and 65536')
+        .setColor(color);
+
+        return message.channel.send(embed);
+    }
 }

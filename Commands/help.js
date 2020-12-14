@@ -78,7 +78,7 @@ module.exports = class extends Command {
 		if(command.usage)
 			embed.addField('Usage', `${prefix}${command.name} ${command.usage}`, true);
 		
-		embed.addField('Cooldown', `${command.cooldown || 3} second(s)`, true);
+		embed.addField('Cooldown', `${command.cooldown} second(s)`, true);
 
 		return message.channel.send(embed);
 	}

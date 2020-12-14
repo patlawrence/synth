@@ -8,7 +8,7 @@ module.exports = class extends Command {
             description: 'Changes the channel used for highlights',
             group: 'Settings',
             aliases: ['c'],
-            usage: '[channel]',
+            usage: '[channel tag]',
             cooldown: 15
         });
     }

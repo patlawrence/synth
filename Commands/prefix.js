@@ -8,7 +8,7 @@ module.exports = class extends Command {
             description: 'Changes prefix',
             group: 'Settings',
             aliases: ['cp', 'changeprefix'],
-            usage: '[prefix]',
+            usage: '[new prefix]',
             cooldown: 15,
             args: 1
         });

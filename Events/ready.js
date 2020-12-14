@@ -39,7 +39,7 @@ module.exports = class extends Event {
                     client.setPrefix(guild.id, prefix); // update cache
                     client.setColor(guild.id, color); // update cache
 
-                    connection.query(`SELECT emoji, channel FROM highlights WHERE guildID = '${guild.id}'`)
+                    connection.query(`SELECT emoji, channel, reactionsNeeded FROM highlights WHERE guildID = '${guild.id}'`)
                     .then(result => {
                         const emoji = result[0][0].emoji;
                         const channel = result[0][0].channel;
@@ -48,6 +48,7 @@ module.exports = class extends Event {
                         client.setHighlightsEmoji(guild.id, emoji);
                         client.setHighlightsChannel(guild.id, channel);
                         client.setHighlightsReactionsNeeded(guild.id, reactionsNeeded);
+
                     }).catch(err => console.error(err));
                 }
             }).catch(err => console.error(err));
