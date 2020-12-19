@@ -1,12 +1,11 @@
-const Command = require('../Structures/Command.js');
-const Reply = require('../Structures/Reply.js');
+const Command = require('../Structures/Command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            description: 'Shows currently set color and changes color',
-            group: 'Settings',
+            description: 'Changes color',
+            group: '⚙️ | Settings',
             aliases: ['c', 'cc', 'changecolor'],
             usage: '[hex code]',
             cooldown: 15
@@ -21,7 +20,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed(); // create embeded message object
 
 		if(!args.length) { // if command doesn't have arguments
-            embed.setDescription(`Embed message color is currently ${color}`)
+            embed.setDescription(`Embed message color is currently: ${color}`)
             .setColor(color);
             
 			return message.channel.send(embed);
@@ -30,8 +29,13 @@ module.exports = class extends Command {
         if(!args[0].includes('#'))
             args[0] = `#${args[0]}`;
 
-        if(args[0].length != 7)
-            return new Reply().colorMustBeHexCode(message);
+        const hexCode = /#[A-Fa-f0-9]{6}/;
+
+        if(!hexCode.test(args[0]))
+            return this.colorMustBeHexCode(message);
+
+        if(args[0] == color)
+            return this.argsMatchesColor(message);
 
 		connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
         .catch(err => console.error(err));
@@ -39,9 +43,33 @@ module.exports = class extends Command {
         client.setColor(guildID, args[0]); // update cache
         color = client.getColor(guildID); // update local color variable
 
-        embed.setDescription(`Embed message color changed to ${color}`)
+        embed.setDescription(`✅ | **Embed message color changed to ${color}**`)
         .setColor(color);
         
 		return message.channel.send(embed);
+    }
+
+    colorMustBeHexCode(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('❌ | **Color must be a hex code value**')
+        .setColor(color);
+
+        return message.channel.send(embed);
+    }
+
+    argsMatchesColor(message, args) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription(`❕ | \`Color is already set to: ${args[0]}\``)
+		.setColor(color);
+		
+        return message.channel.send(embed);
     }
 }

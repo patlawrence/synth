@@ -1,12 +1,11 @@
-const Command = require('../Structures/Command.js');
-const Reply = require('../Structures/Reply.js');
+const Command = require('../Structures/Command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             description: 'Alters how much cooldown commands have',
-            group: 'Settings',
+            group: '⚙️ | Settings',
             aliases: ['cd', 'cds'],
             usage: '[command]'
         });

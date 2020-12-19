@@ -1,14 +1,13 @@
-const Command = require('../Structures/Command.js');
-const Reply = require('../Structures/Reply.js');
+const Command = require('../Structures/Command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             description: 'Changes prefix',
-            group: 'Settings',
+            group: '⚙️ | Settings',
             aliases: ['cp', 'changeprefix'],
-            usage: '[new prefix]',
+            usage: '[prefix]',
             cooldown: 15,
             args: 1
         });
@@ -25,7 +24,10 @@ module.exports = class extends Command {
         args = args.join(' ');
 
         if(args.length > 47)
-            return new Reply().prefixTooLong(message);
+            return this.prefixTooLong(message);
+
+        if(args == prefix)
+            return this.argsMatchesPrefix(message);
 
 		connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`) // update prefix in database to first command argument
         .catch(err => console.error(err));
@@ -33,9 +35,33 @@ module.exports = class extends Command {
         client.setPrefix(guildID, args) // update cache
         prefix = client.getPrefix(guildID); // update local prefix variable
 
-        embed.setDescription(`Prefix changed to ${prefix}`)
+        embed.setDescription(`✅ | **Prefix changed to: ${prefix}**`)
         .setColor(color);
 
 		return message.channel.send(embed);
+    }
+
+    prefixTooLong(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('❌ | **Prefix must be shorter than 47 characters**')
+        .setColor(color);
+
+        return message.channel.send(embed);
+    }
+
+    argsMatchesPrefix(message, args) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription(`❕ | \`Prefix is already set to: ${args[0]}\``)
+		.setColor(color);
+		
+        return message.channel.send(embed);
     }
 }

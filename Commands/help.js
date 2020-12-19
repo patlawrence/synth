@@ -1,11 +1,12 @@
-const Command = require('../Structures/Command.js');
+const Command = require('../Structures/Command/Command.js');
+const CommandHandler = require('../Structures/Command/CommandHandler.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             description: 'Lists all commands or info about a specific command',
-            group: 'Information',
+            group: '💡 | Information',
             aliases: ['h', 'commands', '?'],
             usage: '[command]'
         });
@@ -20,13 +21,13 @@ module.exports = class extends Command {
 		const embed = new MessageEmbed();
 
 		if (!args.length) {
-			embed.setTitle('Help')
+			embed.setTitle('ℹ️ | Help')
 			.setColor(color)
 			.setDescription([
-				'Synth is an all-purpose bot engineered to satisfy all your Discord needs',
-				'[Click here for the full doumentation](https://github.com/pat-lawre/Synth)\n',
-				`Use ${prefix}${this.name} ${this.usage} for more info`
-			].join('\n'));
+				'**Hey! 👋 My name is Synth**\nI\'m a general-purpose bot that can do a whole lot of things! 🙂 I\'m also still in development. 🖥️ So, I might be a little buggy. 🐛 Be sure to report any bugs you find to my creators [here](https://github.com/pat-lawre/Synth/issues) so they can fix them! 🤩 You can also leave feature requests there too 😉\n',
+				`​\n**Check out all the commands I know [here](https://github.com/pat-lawre/Synth/wiki)**\nYou can also use ${prefix}${this.name} ${this.usage} to get info about a command too\n`,
+				'​'
+			].join(''));
 
 			const groups = []; // array that holds command groups
 
@@ -51,34 +52,23 @@ module.exports = class extends Command {
 			return message.channel.send(embed);
 		}
 
-		var command = client.getCommand(args[0]);
+		const commandHandler = new CommandHandler();
+		const command = commandHandler.getCommand(message, args);
 
 		if(!command)
-			return new Reply().doNotUnderstand(message);
+			return commandHandler.doNotUnderstand(message);
 
-		var testCommand;
-		var beginningOfName = `${command.name}`;
-
-		for(var i = 1; i < args.length; i++) {
-			testCommand = client.getCommand(args[i], beginningOfName);
-
-			if(!testCommand)
-				break;
-
-			command = testCommand;
-			beginningOfName += ` ${command.name}`;
-		}		
-
-		embed.setColor(color)
-		.addField(`${prefix}${command.name}`, command.description);
+		embed.setTitle('ℹ️ | Help')
+		.setColor(color)
+		.addField(`${prefix}${command.name}`, `${command.description}\n​`);
 
 		if(command.aliases)
-			embed.addField('Aliases', command.aliases.join(', '), true);
+			embed.addField('📛 | Aliases', command.aliases.join(', '), true);
 
 		if(command.usage)
-			embed.addField('Usage', `${prefix}${command.name} ${command.usage}`, true);
+			embed.addField('📋 | Usage', `${prefix}${command.name} ${command.usage}`, true);
 		
-		embed.addField('Cooldown', `${command.cooldown} second(s)`, true);
+		embed.addField('⏲️ | Cooldown', `${command.cooldown} second(s)`, true);
 
 		return message.channel.send(embed);
 	}

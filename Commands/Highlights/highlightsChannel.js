@@ -1,12 +1,11 @@
-const Command = require('../../Structures/Command.js');
-const Reply = require('../../Structures/Reply.js');
+const Command = require('../../Structures/Command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             description: 'Changes the channel used for highlights',
-            group: 'Settings',
+            group: '⚙️ | Settings',
             aliases: ['c'],
             usage: '[channel tag]',
             cooldown: 15
@@ -24,7 +23,7 @@ module.exports = class extends Command {
         args.shift();
 
         if(!args.length) {
-            embed.setDescription(`Highlights channel is currently ${channel}`)
+            embed.setDescription(`Highlights channel is currently: ${channel}`)
             .setColor(color);
 
             return message.channel.send(embed);
@@ -33,7 +32,10 @@ module.exports = class extends Command {
         const channelTag = /<#\d{18}>/;
 
         if(!(channelTag.test(args[0])))
-            return new Reply().channelMustBeTag(message);
+            return this.channelMustBeTag(message);
+
+        if(args[0] == channel)
+            return this.argsMatchesChannel(message);
 
         connection.query(`UPDATE highlights SET channel = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
         .catch(err => console.error(err));
@@ -41,9 +43,33 @@ module.exports = class extends Command {
         client.setHighlightsChannel(guildID, args[0]) // update cache
         channel = client.getHighlightsChannel(guildID); // update local color variable
 
-        embed.setDescription(`Highlights channel changed to ${channel}`)
+        embed.setDescription(`✅ | **Highlights channel changed to:** ${channel}`)
         .setColor(color);
         
 		return message.channel.send(embed);
+    }
+
+    channelMustBeTag(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('❌ | **Highlights channel must be a channel tag**')
+        .setColor(color);
+
+        return message.channel.send(embed);
+    }
+
+    argsMatchesChannel(message, args) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription(`❕ | \`Highlights channel is already set to: ${args[0]}\``)
+		.setColor(color);
+		
+        return message.channel.send(embed);
     }
 }

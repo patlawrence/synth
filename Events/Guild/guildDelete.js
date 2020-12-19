@@ -15,5 +15,7 @@ module.exports = class extends Event {
         client.deleteColor(guild.id); // delete guild color from cache
         client.deleteHighlightsEmoji(guild.id) // delete guild emoji from cache
         client.deleteHighlightsChannel(guild.id) // delete guild highlights channel from cache
+        client.deleteHighlightsRequiredToCreate(guild.id);
+        client.deleteHighlightsRequiredToDelete(guild.id);
     }
 }

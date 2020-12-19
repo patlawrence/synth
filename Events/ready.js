@@ -39,15 +39,17 @@ module.exports = class extends Event {
                     client.setPrefix(guild.id, prefix); // update cache
                     client.setColor(guild.id, color); // update cache
 
-                    connection.query(`SELECT emoji, channel, reactionsNeeded FROM highlights WHERE guildID = '${guild.id}'`)
+                    connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guild.id}'`)
                     .then(result => {
                         const emoji = result[0][0].emoji;
                         const channel = result[0][0].channel;
-                        const reactionsNeeded = result[0][0].reactionsNeeded;
+                        const requiredToCreate = result[0][0].requiredToCreate;
+                        const requiredToDelete = result[0][0].requiredToDelete;
 
                         client.setHighlightsEmoji(guild.id, emoji);
                         client.setHighlightsChannel(guild.id, channel);
-                        client.setHighlightsReactionsNeeded(guild.id, reactionsNeeded);
+                        client.setHighlightsRequiredToCreate(guild.id, requiredToCreate);
+                        client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
 
                     }).catch(err => console.error(err));
                 }
@@ -63,9 +65,7 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO configs (guildID) VALUES('${guildID}')`)
         .catch(err => console.error(err)); // insert guild data into config
 
-        const systemChannelID = `<#${guild.systemChannelID}>`;
-
-        connection.query(`INSERT INTO highlights (guildID, emoji, channel) VALUES('${guildID}', '❤️', '${systemChannelID}')`)
+        connection.query(`INSERT INTO highlights (guildID) VALUES('${guildID}')`)
         .catch(err => console.error(err)); // insert guild data into highlights
 
         connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guildID}'`) // query database for configs
@@ -77,15 +77,13 @@ module.exports = class extends Event {
             client.setColor(guildID, color); // update cache
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT emoji, channel FROM highlights WHERE guildID = '${guildID}'`)
+        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guildID}'`)
         .then(result => {
             const emoji = result[0][0].emoji;
             const channel = result[0][0].channel;
-            const reactionsNeeded = result[0][0].reactionsNeeded;
 
             client.setHighlightsEmoji(guildID, emoji); // update cache
             client.setHighlightsChannel(guildID, channel); // update cache
-            client.setHighlightsReactionsNeeded(guildID, reactionsNeeded);
         }).catch(err => console.error(err));
     }
 

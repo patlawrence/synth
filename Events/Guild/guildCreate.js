@@ -20,7 +20,7 @@ module.exports = class extends Event {
             client.setColor(guild.id, color);
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT emoji, channel FROM configs WHERE guildID = '${guild.id}'`)
+        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM configs WHERE guildID = '${guild.id}'`)
         .then(result => {
             const emoji = result[0][0].emoji;
             const channel = result[0][0].channel;

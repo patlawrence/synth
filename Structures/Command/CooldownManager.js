@@ -1,4 +1,4 @@
-const { Collection } = require('discord.js');
+const { Collection, MessageEmbed } = require('discord.js');
 
 module.exports = class CooldownsManager {
     isOnCooldown(message, command) {
@@ -51,5 +51,32 @@ module.exports = class CooldownsManager {
 				guilds.delete(guildID); // delete guild from cooldowns
 				
         }, cooldownInMS); // wait cooldownAmount time before executing
-    }
+	}
+	
+	waitBeforeReuse(message, command) {
+        const client = message.client;
+        const guildID = message.guild.id;
+		const authorID = message.author.id;
+		const prefix = client.getPrefix(guildID);
+        const color = client.getColor(guildID);
+        const guilds = client.cooldowns.guilds;
+        const guild = guilds.get(guildID);
+		const users = guild.get(command.name);
+        const embed = new MessageEmbed();
+
+        const messageCreatedTimestamp = users.get(authorID);
+        const cooldownInMS = command.cooldown * 1000;
+        const expirationTime = messageCreatedTimestamp + cooldownInMS; // calculate what time in the future the cooldown expires
+        
+        if(Date.now() <= expirationTime) { // if right now is less than or equal to time when cooldown expires
+            const timeRightNow = Date.now();
+            const timeLeft = (expirationTime - timeRightNow); // calculate time left and convert to seconds
+            const timeLeftInSeconds = timeLeft / 1000;
+
+            embed.setDescription(`⏲️ | **Please wait ${timeLeftInSeconds.toFixed(2)} more second(s) before reusing ${prefix}${command.name}**`)
+            .setColor(color);
+            
+            return message.channel.send(embed);
+		}
+	}
 }

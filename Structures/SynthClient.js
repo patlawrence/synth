@@ -1,13 +1,15 @@
 const path = require('path');
 const { promisify } = require('util');
 const glob = promisify(require('glob'));
-const Command = require('./Command.js');
+const Command = require('./Command/Command.js');
 const Event = require('./Event.js');
 const { Client, Collection } = require('discord.js');
 
 module.exports = class SynthClient extends Client { // client that the bot uses
     constructor() {
-        super();
+        super({
+			partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+		});
         this.commands = new Collection(); // stores all bot commands
         this.prefixes = new Collection(); // stores prefixes for each server bot is in
         this.colors = new Collection(); // stores colors for each server bot is in
@@ -16,7 +18,8 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 		this.highlights = []; // stores highlights properties for commands
 		this.highlights.emojis = new Collection(); // stores emojis for all guilds for highlights
 		this.highlights.channels = new Collection(); // stores highlights channel IDs
-		this.highlights.reactionsNeeded = new Collection();
+		this.highlights.requiredToCreate = new Collection();
+		this.highlights.requiredToDelete = new Collection();
 	}
 
 	getCommand(name, beginningOfName) {
@@ -33,36 +36,24 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 	getPrefix(guildID) { return this.prefixes.get(guildID); }
 	getColor(guildID) { return this.colors.get(guildID); }
 	getHighlightsEmoji(guildID) { return this.highlights.emojis.get(guildID); }
-	getHighlightsChannel(guildID) {return this.highlights.channels.get(guildID); }
-	getHighlightsReactionsNeeded(guildID) {return this.highlights.reactionsNeeded.get(guildID); }
+	getHighlightsChannel(guildID) { return this.highlights.channels.get(guildID); }
+	getHighlightsRequiredToCreate(guildID) { return this.highlights.requiredToCreate.get(guildID); }
+	getHighlightsRequiredToDelete(guildID) { return this.highlights.requiredToDelete.get(guildID); }
 
 	setCommand(name, command) { this.commands.set(name, command); }
 	setPrefix(guildID, prefix) { this.prefixes.set(guildID, prefix); }
 	setColor(guildID, color) { this.colors.set(guildID, color); }
 	setHighlightsEmoji(guildID, emoji) { this.highlights.emojis.set(guildID, emoji); }
 	setHighlightsChannel(guildID, channel) { this.highlights.channels.set(guildID, channel); }
-	setHighlightsReactionsNeeded(guildID, reactionsNeeded) { this.highlights.reactionsNeeded.set(guildID, reactionsNeeded) }
+	setHighlightsRequiredToCreate(guildID, requiredToCreate) { this.highlights.requiredToCreate.set(guildID, requiredToCreate); }
+	setHighlightsRequiredToDelete(guildID, requiredToDelete) { this.highlights.requiredToDelete.set(guildID, requiredToDelete); }
 
 	deletePrefix(guildID) { this.prefixes.delete(guildID); }
 	deleteColor(guildID) { this.colors.delete(guildID); }
 	deleteHighlightsEmoji(guildID) { this.highlights.emojis.delete(guildID); }
 	deleteHighlightsChannel(guildID) { this.highlights.channels.delete(guildID); }
-	deleteHighlightsReactionsNeeded(guildID) { this.highlights.reactionsNeeded.delete(guildID); }
-
-	getCommandString(message) {
-        const guildID = message.guild.id;
-        const prefix = this.getPrefix(guildID);
-        const content = message.content;
-
-        var args = content.slice(prefix.length);
-
-		if(!args)
-			return [''];
-
-		args = args.trim();
-
-        return args.split(/ +/);
-    }
+	deleteHighlightsRequiredToCreate(guildID) { this.highlights.requiredToCreate.delete(guildID); }
+	deleteHighlightsRequiredToDelete(guildID) { this.highlights.requiredToDelete.delete(guildID); }
 
     login(token) { // bot goes online
         this.loadCommands();
@@ -80,7 +71,7 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 
 	loadCommands() { // loads .js files in the /Commands/ folder
 		return glob(`${this.directory}Commands/**/*.js`).then(commands => {
-			for (const commandFile of commands) { // for each .js file in /Commands/ folder
+			for(const commandFile of commands) { // for each .js file in /Commands/ folder
 				delete require.cache[commandFile]; // delete the cache for commandFile
 				const { name } = path.parse(commandFile); // get command name from commandFile
 				const file = require(commandFile); // grabbing logic from commandFile
@@ -111,7 +102,7 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 
 	loadEvents() { // loads .js files in the /Events/ folder
 		return glob(`${this.directory}Events/**/*.js`).then(events => {
-			for (const eventFile of events) { // for each .js file in /Events/ folder
+			for(const eventFile of events) { // for each .js file in /Events/ folder
 				delete require.cache[eventFile]; // delete the cache for eventFile
 				const { name } = path.parse(eventFile); // get event name from eventFile
 				const file = require(eventFile); // grabbing logic from eventFile

@@ -25,7 +25,23 @@ PASSWORD = Your database password here
 DATABASE = Your database name here
 ```
 
-After that's set up, open the MySQL terminal and `schema.sql` in the main directory of Synth. Log into the MySQL server and copy and paste the contents of `schema.sql` into the terminal. Once that's done. Open up the command prompt, CD into the folder where synth is stored, and run the `node .` command.
+Next, head to your MySQL server `my.ini` file. The default install location for the file is `C:\ProgramData\MySQL\MySQL Server X.Y\my.ini`. You'll need to add these lines of code to the file.
+
+* Under `\[client\]`:
+    `default-character-set = utf8mb4`
+
+* Under `\[mysql\]`:
+    `default-character-set = utf8mb4`
+
+* Under `\[mysqld\]`:
+    ```
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_unicode_ci
+    init_connect = 'SET collation_connection = utf8mb4_unicode_ci'
+    init-connect = 'SET NAMES utf8mb4'
+    ```
+
+After all that's set up, open the MySQL terminal and `schema.sql` in the main directory of Synth. Log into the MySQL server and copy and paste the contents of `schema.sql` into the terminal. Once that's done. Open up the command prompt, CD into the folder where synth is stored, and run the `node .` command.
 
 ## Documentation
 

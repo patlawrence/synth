@@ -1,6 +1,10 @@
-CREATE DATABASE data DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
+CREATE DATABASE synth DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
 
-USE data;
+CREATE USER 'synth'@'localhost' IDENTIFIED BY 'password';
+
+GRANT SELECT, INSERT, UPDATE, DELETE, ALTER ON synth.* TO 'synth'@'localhost';
+
+USE synth;
 
 CREATE TABLE configs (
     guildID CHAR(18) NOT NULL PRIMARY KEY,
@@ -13,5 +17,6 @@ CREATE TABLE highlights (
     FOREIGN KEY (guildID) REFERENCES configs(guildID),
     emoji CHAR(47),
     channel CHAR(21),
-    reactionsNeeded SMALLINT(5) UNSIGNED DEFAULT 3
+    requiredToCreate SMALLINT(5) UNSIGNED DEFAULT 3,
+    requiredToDelete SMALLINT(5) UNSIGNED DEFAULT 2
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
