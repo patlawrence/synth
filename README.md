@@ -42,25 +42,3 @@ Next, head to your MySQL server `my.ini` file. The default install location for 
     ```
 
 After all that's set up, open the MySQL terminal and `schema.sql` in the main directory of Synth. Log into the MySQL server and copy and paste the contents of `schema.sql` into the terminal. Once that's done. Open up the command prompt, CD into the folder where synth is stored, and run the `node .` command.
-
-## Documentation
-
-This list is ordered by command category/group. If you're looking for a command that you don't know the name of then think of what group it might be in first. Then search down the list for it.
-
-### General
-
-* `help` - Displays all the available commands that come with Synth. Currently anyone can call any command listed in `help`; even commands that change the bot's settings. We're currently in the process of changing that. Additionally, you can get more information about a specific command if you specify a command as an argument for help.
-
-* `ping` - This just pings the bot. The bot responds with the latency of the ping. That's all it does. You can use it if the bot is being unresponsive to check if the bot is online. If the bot doesn't respond, then it's offline. 
-
-### Settings
-
-* `prefix` - Changes the bot's prefix. You can use this to view the prefix by not adding arguments or to change the prefix by adding the new prefix as an argument to the command.
-
-* `color` - Every message the bot sends has a color on the embed. This command allows you to see what color the embeded messages are currently and allows you to change it. Colors must be in hexadecimal format (with the #) or else the color will be changed to black.
-
-* `highlights` - Will bring up all the subcommands that relate to highlights. Currently, highlights has 2 sub commands.
-
-    * `emoji` - Allows you to change the reaction emoji that Synth monitors for highlights.
-    
-    * `channel` - Allows you to change the channel that highlights are sent in.
