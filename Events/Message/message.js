@@ -12,7 +12,7 @@ module.exports = class extends Event {
         if(this.isDM(message)) {
             embed.setDescription('I\'m not built to respond to messages in DMs. 😔 Please talk to me in a server that we\'re both in');
 
-            return message.channel.send(embed); // if message is sent in a DM and message isn't sent by bot
+            return message.channel.send(embed);
         }
 
         const guildID = message.guild.id;
@@ -22,31 +22,31 @@ module.exports = class extends Event {
             embed.setDescription(`**My prefix is currently set to: ${prefix}**`)
             .setColor(color);
 
-            return message.channel.send(embed); // if message starts with bot tag
+            return message.channel.send(embed);
         }
 
         if(!this.isMessageACommand(message))
-            return // if message doesn't start with prefix or message is sent by bot
+            return
 
-        var args = this.getArgs(message); // get arguments by separating prefix and separate eache word into a different element of the array
-        
+        var args = this.getArgs(message);
+
         const commandHandler = new CommandHandler();
         const command = commandHandler.handle(message, args);
 
         if(!command)
             return commandHandler.doNotUnderstand(message);
 
-        args.shift(); // get command name from args and remove command name from array
-        
+        args.shift();
+
         if(command.args > args.length)
-            return this.incorrectNumberOfArgs(message, command); // if command's required arguments is greater than the arguments provided
+            return this.incorrectNumberOfArgs(message, command);
 
         if(cooldownManager.isOnCooldown(message, command))
             return cooldownManager.waitBeforeReuse(message, command);
 
         cooldownManager.putOnCooldown(message, command);
         return command.run(message, args)
-        .catch(err => { // run command
+        .catch(err => {
             console.error(err);
             return this.errorRunning(message, command);
         });
@@ -110,7 +110,8 @@ module.exports = class extends Event {
 
 		var description = '📋 | **Incorrect number of arguments**\n';
 
-		if (command.usage) description += `​\n❕ | Usage: ${prefix}${command.name} ${command.usage}`; // if command has usage data
+		if (command.usage)
+            description += `​\n❕ | Usage: ${prefix}${command.name} ${command.usage}`;
 
 		embed.setDescription(description)
 		.setColor(color);
@@ -127,7 +128,7 @@ module.exports = class extends Event {
 
         embed.setDescription(`❗ | **Error running ${prefix}${command.name}**`)
 		.setColor(color);
-		
+
         return message.channel.send(embed);
     }
 }

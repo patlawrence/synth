@@ -13,9 +13,9 @@ module.exports = class extends Command {
     async run(message, args) {
         const client = this.client;
         const guildID = message.guild.id;
-        const color = client.getColor(guildID); // get color from the cache
-        const embed = new MessageEmbed(); // create embedded message object
-        
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
         embed.setDescription(`Pinging...`)
         .setColor(color);
 

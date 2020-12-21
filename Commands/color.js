@@ -15,14 +15,14 @@ module.exports = class extends Command {
     async run(message, args) {
         const client = this.client;
         const guildID = message.guild.id;
-        var color = client.getColor(guildID); // get color from cache
-        const connection = await require('../Database/database.js'); // create connection to database
-        const embed = new MessageEmbed(); // create embeded message object
+        var color = client.getColor(guildID);
+        const connection = await require('../Database/database.js');
+        const embed = new MessageEmbed();
 
-		if(!args.length) { // if command doesn't have arguments
+		if(!args.length) {
             embed.setDescription(`Embed message color is currently: ${color}`)
             .setColor(color);
-            
+
 			return message.channel.send(embed);
         }
 
@@ -37,15 +37,15 @@ module.exports = class extends Command {
         if(args[0] == color)
             return this.argsMatchesColor(message);
 
-		connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
+		connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        client.setColor(guildID, args[0]); // update cache
-        color = client.getColor(guildID); // update local color variable
+        client.setColor(guildID, args[0]);
+        color = client.getColor(guildID);
 
         embed.setDescription(`✅ | **Embed message color changed to ${color}**`)
         .setColor(color);
-        
+
 		return message.channel.send(embed);
     }
 
@@ -69,7 +69,7 @@ module.exports = class extends Command {
 
         embed.setDescription(`❕ | \`Color is already set to: ${args[0]}\``)
 		.setColor(color);
-		
+
         return message.channel.send(embed);
     }
 }

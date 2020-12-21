@@ -16,10 +16,10 @@ module.exports = class extends Command {
     async run(message, args) {
         const client = this.client;
         const guildID = message.guild.id;
-        var prefix = client.getPrefix(guildID); // get prefix from cache
-        const color = client.getColor(guildID); // get color from cache
-        const connection = await require('../Database/database.js'); // create connection to database
-        const embed = new MessageEmbed(); // create embedded message object
+        var prefix = client.getPrefix(guildID);
+        const color = client.getColor(guildID);
+        const connection = await require('../Database/database.js');
+        const embed = new MessageEmbed();
 
         args = args.join(' ');
 
@@ -29,11 +29,11 @@ module.exports = class extends Command {
         if(args == prefix)
             return this.argsMatchesPrefix(message);
 
-		connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`) // update prefix in database to first command argument
+		connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        client.setPrefix(guildID, args) // update cache
-        prefix = client.getPrefix(guildID); // update local prefix variable
+        client.setPrefix(guildID, args)
+        prefix = client.getPrefix(guildID);
 
         embed.setDescription(`✅ | **Prefix changed to: ${prefix}**`)
         .setColor(color);
@@ -61,7 +61,7 @@ module.exports = class extends Command {
 
         embed.setDescription(`❕ | \`Prefix is already set to: ${args[0]}\``)
 		.setColor(color);
-		
+
         return message.channel.send(embed);
     }
 }

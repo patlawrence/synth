@@ -33,7 +33,7 @@ module.exports = class CommandHandler {
 
         embed.setDescription(`❔ | **I don't know what you mean by ${message.content}**`)
 		.setColor(color);
-		
+
         return message.channel.send(embed);
     }
 }

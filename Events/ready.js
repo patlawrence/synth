@@ -11,33 +11,33 @@ module.exports = class extends Event {
         const client = this.client;
         const commands = client.commands;
         const user = client.user;
-        const connection = await require('../Database/database.js'); // create database connection
+        const connection = await require('../Database/database.js');
 
         this.fillCaches(connection);
         this.cleanDatabase(connection);
 
-        user.setActivity('commands', { // change bot status
+        user.setActivity('commands', {
             type: 'LISTENING'
         });
 
-        console.info(`Ready. Loaded ${commands.size} commands. logged in as ${user.tag}`);  
+        console.info(`Ready. Loaded ${commands.size} commands. logged in as ${user.tag}`);
     }
 
-    fillCaches(connection) { // gets the config for each guild and puts the data into the cache
+    fillCaches(connection) {
         const client = this.client;
         const guilds = client.guilds;
 
-        guilds.cache.forEach(guild => { // for each guild in guilds cache
-            connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`) // query database for configs
+        guilds.cache.forEach(guild => {
+            connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`)
             .then(result => {
-                if(!result[0].length) { // if database doesn't have an entry for guild
+                if(!result[0].length) {
                     this.addGuild(connection, guild.id);
                 } else {
                     const prefix = result[0][0].prefix;
                     const color = result[0][0].color;
 
-                    client.setPrefix(guild.id, prefix); // update cache
-                    client.setColor(guild.id, color); // update cache
+                    client.setPrefix(guild.id, prefix);
+                    client.setColor(guild.id, color);
 
                     connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guild.id}'`)
                     .then(result => {
@@ -57,24 +57,24 @@ module.exports = class extends Event {
         });
     }
 
-    addGuild(connection, guildID) { // creates a new database entry for guild if guild added bot to server while bot was offline
+    addGuild(connection, guildID) { // guild is not in database if bot was added to server while bot was offline
         const client = this.client;
         const guilds = client.guilds;
         const guild = guilds.cache.get(guildID);
 
         connection.query(`INSERT INTO configs (guildID) VALUES('${guildID}')`)
-        .catch(err => console.error(err)); // insert guild data into config
+        .catch(err => console.error(err));
 
         connection.query(`INSERT INTO highlights (guildID) VALUES('${guildID}')`)
-        .catch(err => console.error(err)); // insert guild data into highlights
+        .catch(err => console.error(err));
 
-        connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guildID}'`) // query database for configs
+        connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guildID}'`)
         .then(result => {
             const prefix = result[0][0].prefix;
             const color = result[0][0].color;
 
-            client.setPrefix(guildID, prefix); // update cache
-            client.setColor(guildID, color); // update cache
+            client.setPrefix(guildID, prefix);
+            client.setColor(guildID, color);
         }).catch(err => console.error(err));
 
         connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guildID}'`)
@@ -82,21 +82,21 @@ module.exports = class extends Event {
             const emoji = result[0][0].emoji;
             const channel = result[0][0].channel;
 
-            client.setHighlightsEmoji(guildID, emoji); // update cache
-            client.setHighlightsChannel(guildID, channel); // update cache
+            client.setHighlightsEmoji(guildID, emoji);
+            client.setHighlightsChannel(guildID, channel);
         }).catch(err => console.error(err));
     }
 
-    cleanDatabase(connection) { // deletes guilds that kicked bot from guild while bot was offline
+    cleanDatabase(connection) { // guild is still in database if bot was kicked from server while bot was offline
         const client = this.client;
         const guilds = client.guilds;
 
-        connection.query('SELECT guildID FROM configs') // get all guilds in database
+        connection.query('SELECT guildID FROM configs')
             .then(result => {
-                for(var i = 0; i < result[0].length; i++) { // for each guild entry in result
+                for(var i = 0; i < result[0].length; i++) {
                     const guildID = result[0][i].guildID;
-                    
-                    if(!guilds.cache.has(guildID)) // if guild is not in client guilds cache
+
+                    if(!guilds.cache.has(guildID))
                         this.deleteGuild(connection, guildID);
                 }
             }).catch(err => console.error(err));
@@ -104,9 +104,9 @@ module.exports = class extends Event {
 
     deleteGuild(connection, guildID) {
         connection.query(`DELETE FROM highlights WHERE guildID = '${guildID}'`)
-        .catch(err => console.error(err)); // delete guild data from highlights
+        .catch(err => console.error(err));
 
         connection.query(`DELETE FROM configs WHERE guildID = '${guildID}'`)
-        .catch(err => console.error(err)); // delete guild data from configs
+        .catch(err => console.error(err));
     }
 }

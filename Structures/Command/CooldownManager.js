@@ -1,6 +1,6 @@
 const { Collection, MessageEmbed } = require('discord.js');
 
-module.exports = class CooldownsManager {
+module.exports = class CooldownsManager { // prevents command and database query spam
     isOnCooldown(message, command) {
 		const client = message.client;
         const guildID = message.guild.id;
@@ -18,7 +18,7 @@ module.exports = class CooldownsManager {
 
 		if(users.has(authorID))
 			return true;
-			
+
 		return false;
     }
 
@@ -29,53 +29,54 @@ module.exports = class CooldownsManager {
 		const guilds = client.cooldowns.guilds;
 
 		if(!guilds.has(guildID))
-			guilds.set(guildID, new Collection()); // add guild to cooldowns
-			
+			guilds.set(guildID, new Collection());
+
 		const guild = guilds.get(guildID);
 
 		if(!guild.has(command.name))
-			guild.set(command.name, new Collection()); // add command to guild specific cooldowns
+			guild.set(command.name, new Collection());
 
-		const usersOnCooldown = guild.get(command.name);
+		const users = guild.get(command.name);
 		const cooldownInMS = command.cooldown * 1000;
-		
-		usersOnCooldown.set(authorID, message.createdTimestamp); // add message author and time message was created to command specific cooldown list
 
-        setTimeout(() => { // after a specified amount of time
-			usersOnCooldown.delete(authorID); // delete user from command cooldown
+		users.set(authorID, message.createdTimestamp);
 
-			if(!usersOnCooldown.size)
-				guild.delete(command.name); // delete command from guild cooldowns
-				
+        setTimeout(() => {
+            users.delete(authorID);
+
+            if(!users.size)
+                guild.delete(command.name);
+
 			if(!guild.size)
-				guilds.delete(guildID); // delete guild from cooldowns
-				
-        }, cooldownInMS); // wait cooldownAmount time before executing
+				guilds.delete(guildID);
+
+        }, cooldownInMS);
 	}
-	
+
 	waitBeforeReuse(message, command) {
         const client = message.client;
         const guildID = message.guild.id;
-		const authorID = message.author.id;
-		const prefix = client.getPrefix(guildID);
+    	const authorID = message.author.id;
+    	const prefix = client.getPrefix(guildID);
         const color = client.getColor(guildID);
         const guilds = client.cooldowns.guilds;
         const guild = guilds.get(guildID);
-		const users = guild.get(command.name);
+    	const users = guild.get(command.name);
         const embed = new MessageEmbed();
 
         const messageCreatedTimestamp = users.get(authorID);
         const cooldownInMS = command.cooldown * 1000;
-        const expirationTime = messageCreatedTimestamp + cooldownInMS; // calculate what time in the future the cooldown expires
-        
-        if(Date.now() <= expirationTime) { // if right now is less than or equal to time when cooldown expires
-            const timeRightNow = Date.now();
-            const timeLeft = (expirationTime - timeRightNow); // calculate time left and convert to seconds
+        const expirationTime = messageCreatedTimestamp + cooldownInMS;
+
+    	const timeRightNow = Date.now();
+
+        if(timeRightNow <= expirationTime) {
+            const timeLeft = (expirationTime - timeRightNow);
             const timeLeftInSeconds = timeLeft / 1000;
 
             embed.setDescription(`⏲️ | **Please wait ${timeLeftInSeconds.toFixed(2)} more second(s) before reusing ${prefix}${command.name}**`)
             .setColor(color);
-            
+
             return message.channel.send(embed);
 		}
 	}

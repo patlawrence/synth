@@ -37,15 +37,15 @@ module.exports = class extends Command {
         if(args[0] == channel)
             return this.argsMatchesChannel(message);
 
-        connection.query(`UPDATE highlights SET channel = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
+        connection.query(`UPDATE highlights SET channel = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        client.setHighlightsChannel(guildID, args[0]) // update cache
-        channel = client.getHighlightsChannel(guildID); // update local color variable
+        client.setHighlightsChannel(guildID, args[0]);
+        channel = client.getHighlightsChannel(guildID);
 
         embed.setDescription(`✅ | **Highlights channel changed to:** ${channel}`)
         .setColor(color);
-        
+
 		return message.channel.send(embed);
     }
 
@@ -69,7 +69,7 @@ module.exports = class extends Command {
 
         embed.setDescription(`❕ | \`Highlights channel is already set to: ${args[0]}\``)
 		.setColor(color);
-		
+
         return message.channel.send(embed);
     }
 }

@@ -38,15 +38,15 @@ module.exports = class extends Command {
         if(args[0] == requiredToDelete)
             return this.argsMatchesRequiredToDelete(message, args);
 
-        connection.query(`UPDATE highlights SET requiredToDelete = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
+        connection.query(`UPDATE highlights SET requiredToDelete = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        client.setHighlightsRequiredToDelete(guildID, args[0]) // update cache
-        requiredToDelete = client.getHighlightsRequiredToDelete(guildID); // update local color variable
+        client.setHighlightsRequiredToDelete(guildID, args[0]);
+        requiredToDelete = client.getHighlightsRequiredToDelete(guildID);
 
         embed.setDescription(`✅ | **Reactions needed to delete a highlight changed to: ${requiredToDelete}**`)
         .setColor(color);
-        
+
         return message.channel.send(embed);
     }
 
@@ -60,10 +60,10 @@ module.exports = class extends Command {
 
         var description = '❌ | **Reactions needed to create a highlight must be less than reactions needed to create a highlight**\n'
 
-        connection.query(`UPDATE highlights SET requiredToDelete = '${requiredToCreate - 1}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
+        connection.query(`UPDATE highlights SET requiredToDelete = '${requiredToCreate - 1}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
-            
-        client.setHighlightsRequiredToDelete(guildID, requiredToCreate - 1) // update cache
+
+        client.setHighlightsRequiredToDelete(guildID, requiredToCreate - 1)
         requiredToDelete = client.getHighlightsRequiredToDelete(guildID);
 
         description += `​\n✅ | **Reactions needed to delete a highlight changed to: ${requiredToDelete}**`;
@@ -82,7 +82,7 @@ module.exports = class extends Command {
 
         embed.setDescription(`❕ | \`Reactions needed to delete a highlight is already set to: ${args[0]}\``)
 		.setColor(color);
-		
+
         return message.channel.send(embed);
     }
 }

@@ -1,7 +1,7 @@
 require('dotenv').config();
-const mySQL = require('mysql2/promise');
+const mySQL = require('mysql2/promise'); // mysql client that focuses on performance
 
-module.exports = mySQL.createConnection({ // automatically creates a connection when it's required
+module.exports = mySQL.createConnection({
     user: process.env.USER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,

@@ -38,11 +38,11 @@ module.exports = class extends Command {
         if(args[0] == requiredToCreate)
             return this.argsMatchesRequiredToCreate(message, args);
 
-        connection.query(`UPDATE highlights SET requiredToCreate = '${args[0]}' WHERE guildID = '${guildID}'`) // update color in database to first command arguemnt
+        connection.query(`UPDATE highlights SET requiredToCreate = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        client.setHighlightsRequiredToCreate(guildID, args[0]) // update cache
-        requiredToCreate = client.getHighlightsRequiredToCreate(guildID); // update local color variable
+        client.setHighlightsRequiredToCreate(guildID, args[0]);
+        requiredToCreate = client.getHighlightsRequiredToCreate(guildID);
 
         var description = `✅ | **Reactions needed to create a highlight changed to:   ${requiredToCreate}**\n`;
 
@@ -61,7 +61,7 @@ module.exports = class extends Command {
 
         embed.setDescription(description)
         .setColor(color);
-        
+
         return message.channel.send(embed);
     }
 
@@ -85,7 +85,7 @@ module.exports = class extends Command {
 
         embed.setDescription(`❕ | \`Reactions needed to create a highlight is already set to: ${args[0]}\``)
 		.setColor(color);
-		
+
         return message.channel.send(embed);
     }
 }

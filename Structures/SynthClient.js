@@ -1,34 +1,34 @@
-const path = require('path');
+const path = require('path'); // utilities for working with file and directory paths
 const { promisify } = require('util');
-const glob = promisify(require('glob'));
+const glob = promisify(require('glob')); // matches files using patterns that the shell uses
 const Command = require('./Command/Command.js');
 const Event = require('./Event.js');
 const { Client, Collection } = require('discord.js');
 
-module.exports = class SynthClient extends Client { // client that the bot uses
+module.exports = class SynthClient extends Client {
     constructor() {
         super({
-			partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+            partials: ['MESSAGE', 'CHANNEL', 'REACTION'] // allows the client to emit events for uncached messages, channels, and reactions
 		});
-        this.commands = new Collection(); // stores all bot commands
-        this.prefixes = new Collection(); // stores prefixes for each server bot is in
-        this.colors = new Collection(); // stores colors for each server bot is in
-        this.cooldowns = []; // stores cooldown properties for commands
-		this.cooldowns.guilds = new Collection(); // stores cooldowns based on each time a user sends a command
-		this.highlights = []; // stores highlights properties for commands
-		this.highlights.emojis = new Collection(); // stores emojis for all guilds for highlights
-		this.highlights.channels = new Collection(); // stores highlights channel IDs
-		this.highlights.requiredToCreate = new Collection();
-		this.highlights.requiredToDelete = new Collection();
+        this.commands = new Collection();
+        this.prefixes = new Collection();
+        this.colors = new Collection();
+        this.cooldowns = [];
+	    this.cooldowns.guilds = new Collection();
+	    this.highlights = [];
+	    this.highlights.emojis = new Collection();
+	    this.highlights.channels = new Collection();
+	    this.highlights.requiredToCreate = new Collection();
+	    this.highlights.requiredToDelete = new Collection();
 	}
 
-	getCommand(name, beginningOfName) {
+	getCommand(name, beginningOfName) { // beginningOfName is for subcommands. this function will combine beginningOfName and name and search if it's provided
 		const commands = this.commands;
 
 		name = name.toLowerCase();
 
 		if(typeof beginningOfName != 'undefined')
-			return commands.find(command => command.name == `${beginningOfName} ${name}` || command.name.startsWith(`${beginningOfName} `) && command.aliases && command.aliases.includes(name)); // get command from collection based on name or get command from collection based on command aliases
+			return commands.find(command => command.name == `${beginningOfName} ${name}` || command.name.startsWith(`${beginningOfName} `) && command.aliases && command.aliases.includes(name));
 
 		return commands.get(name) || commands.find(command => !command.name.includes(' ') && command.aliases && command.aliases.includes(name));
 	}
@@ -55,7 +55,7 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 	deleteHighlightsRequiredToCreate(guildID) { this.highlights.requiredToCreate.delete(guildID); }
 	deleteHighlightsRequiredToDelete(guildID) { this.highlights.requiredToDelete.delete(guildID); }
 
-    login(token) { // bot goes online
+    login(token) {
         this.loadCommands();
         this.loadEvents();
         super.login(token);
@@ -64,56 +64,53 @@ module.exports = class SynthClient extends Client { // client that the bot uses
 	get directory() { return `${path.dirname(require.main.filename)}${path.sep}`; }
 
     isClass(file) {
-		return typeof file === 'function' &&
-        typeof file.prototype === 'object' &&
-        file.toString().substring(0, 5) === 'class';
+		return typeof file === 'function' && typeof file.prototype === 'object' && file.toString().substring(0, 5) === 'class';
 	}
 
-	loadCommands() { // loads .js files in the /Commands/ folder
-		return glob(`${this.directory}Commands/**/*.js`).then(commands => {
-			for(const commandFile of commands) { // for each .js file in /Commands/ folder
-				delete require.cache[commandFile]; // delete the cache for commandFile
-				const { name } = path.parse(commandFile); // get command name from commandFile
-				const file = require(commandFile); // grabbing logic from commandFile
+	loadCommands() {
+		return glob(`${this.directory}Commands/**/*.js`).then(commands => { // filters out non .js files
+			for(const commandFile of commands) {
+				delete require.cache[commandFile];
+				const { name } = path.parse(commandFile);
+				const file = require(commandFile);
 				var adjustedName = '';
 
-				for(var i = 0; i < name.length; i++) {
-					if(name.charCodeAt(i) > 64 && name.charCodeAt(i) < 91) {
+				for(var i = 0; i < name.length; i++)
+					if(name.charCodeAt(i) > 64 && name.charCodeAt(i) < 91) // if character is uppercase
 						adjustedName = `${name.substring(0, i)} ${name.substring(i)}`.toLowerCase();
-						adjustedName.toLowerCase();
-					}
-				}
+
+				adjustedName.toLowerCase();
 
 				if(!adjustedName)
 					adjustedName = name;
 
 				if(!this.isClass(file))
-					throw new TypeError(`Command ${name} doesn't export a class`); // check if file is a class
-				
-				const command = new file(this, adjustedName); // create command object
+					throw new TypeError(`Command ${name} doesn't export a class`);
+
+				const command = new file(this, adjustedName);
 
 				if(!(command instanceof Command))
-					throw new TypeError(`Command ${name} doesn't belong in Commands`); // if file doesn't extend Command throw error
+					throw new TypeError(`Command ${name} doesn't belong in Commands`);
 
-				this.setCommand(adjustedName, command); // put command into commands collection
+				this.setCommand(adjustedName, command);
 			}
 		});
 	}
 
-	loadEvents() { // loads .js files in the /Events/ folder
-		return glob(`${this.directory}Events/**/*.js`).then(events => {
-			for(const eventFile of events) { // for each .js file in /Events/ folder
-				delete require.cache[eventFile]; // delete the cache for eventFile
-				const { name } = path.parse(eventFile); // get event name from eventFile
-				const file = require(eventFile); // grabbing logic from eventFile
+	loadEvents() {
+		return glob(`${this.directory}Events/**/*.js`).then(events => { // filters out non .js files
+			for(const eventFile of events) {
+				delete require.cache[eventFile];
+				const { name } = path.parse(eventFile);
+				const file = require(eventFile);
 
 				if(!this.isClass(file))
-					throw new TypeError(`Event ${name} doesn't export a class`); // check if File is a class
+					throw new TypeError(`Event ${name} doesn't export a class`);
 
-				const event = new file(this, name); // create event object
+				const event = new file(this, name);
 
 				if(!(event instanceof Event))
-					throw new TypeError(`Event ${name} doesn't belong in Events`); // if file doesn't extend Event throw error
+					throw new TypeError(`Event ${name} doesn't belong in Events`);
 
 				event.emitter[event.type](name, (...args) => event.run(...args)); // attach a listener to the event
 			}

@@ -1,12 +1,12 @@
-module.exports = class Command { // base class for commands
+module.exports = class Command {
     constructor(client, name, options = {}) {
-        this.client = client; // bot client
-        this.name = name; // keyword that triggers command
-        this.description = options.description || 'No description provided'; // brief overview of what the command does
-        this.group = options.group || '🤷 | Miscellaneous'; // category for module enabling and disabling
-        this.aliases = options.aliases; // other keywords that also trigger the command
-        this.usage = options.usage; // details arguments the command takes
-        this.cooldown = options.cooldown || 5; // length of time before the command can be used again
+        this.client = client;
+        this.name = name;
+        this.description = options.description || 'No description provided';
+        this.group = options.group || '🤷 | Miscellaneous';
+        this.aliases = options.aliases;
+        this.usage = options.usage;
+        this.cooldown = options.cooldown || 5;
         this.args = options.args || 0; // how many arguments are required
     }
 

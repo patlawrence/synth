@@ -1,8 +1,8 @@
 const SynthClient = require('./Structures/SynthClient.js');
-require('dotenv').config();
+require('dotenv').config(); // library that allows storage of environment variables in a .env file
 
-const client = new SynthClient(); // client that the bot uses
+const client = new SynthClient();
 
 (async () => {
-    client.login(process.env.TOKEN); // bot goes online
+    client.login(process.env.TOKEN);
 })();

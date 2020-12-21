@@ -1,8 +1,8 @@
-module.exports = class Event { // base class for events
+module.exports = class Event {
     constructor(client, name, options = {}) {
-        this.client = client; // bot client
-        this.name = name; // keyword that triggers event
-        this.type = options.type || 'on'; // does this event fire multiple times or just once
+        this.client = client;
+        this.name = name;
+        this.type = options.type || 'on'; // can event fire multiple times or just once
         this.emitter = (typeof options.emitter === 'string' ? this.client[options.emitter] : options.emitter) || this.client; // defines who will emit the event
     }
 

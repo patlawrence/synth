@@ -15,7 +15,7 @@ module.exports = class extends Command {
         const client = this.client;
         const guildID = message.guild.id;
         const prefix = client.getPrefix(guildID);
-        const color = client.getColor(guildID); // get color from cache
+        const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
         embed.setTitle('ℹ️ | Highlights')
