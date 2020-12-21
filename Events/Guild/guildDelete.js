@@ -3,7 +3,7 @@ const Event = require('../../Structures/Event.js');
 module.exports = class extends Event {
     async run(guild) {
         const client = this.client;
-        const connection = await require('../database.js');
+        const connection = await require('../../Database/database.js');
 
         connection.query(`DELETE FROM highlights WHERE guildID = '${guild.id}'`)
         .catch(err => console.error(err));

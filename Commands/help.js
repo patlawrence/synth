@@ -25,7 +25,7 @@ module.exports = class extends Command {
 			.setColor(color)
 			.setDescription([
 				'**Hey! 👋 My name is Synth**\nI\'m a general-purpose bot that can do a whole lot of things! 🙂 I\'m also still in development. 🖥️ So, I might be a little buggy. 🐛 Be sure to report any bugs you find to my creators [here](https://github.com/pat-lawre/Synth/issues) so they can fix them! 🤩 You can also leave feature requests there too 😉\n',
-				`​\n**Check out all the commands I know [here](https://github.com/pat-lawre/Synth/wiki/Documentation)**\nYou can also use ${prefix}${this.name} ${this.usage} to get info about a command too\n`,
+				`​\n**Check out all the commands I know [here](https://github.com/pat-lawre/Synth/wiki/Documentation)**\nYou can also use ${prefix}${this.name} ${this.usage} to get info about a command too\n`, // there is a zero width character before \n
 				'​'
 			].join(''));
 

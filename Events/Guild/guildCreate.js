@@ -1,4 +1,5 @@
 const Event = require('../../Structures/Event.js');
+const WelcomeMessage = require('../../Structures/WelcomeMessage.js');
 
 module.exports = class extends Event {
     async run(guild) {
@@ -20,13 +21,20 @@ module.exports = class extends Event {
             client.setColor(guild.id, color);
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM configs WHERE guildID = '${guild.id}'`)
+        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guild.id}'`)
         .then(result => {
             const emoji = result[0][0].emoji;
             const channel = result[0][0].channel;
+            const requiredToCreate = result[0][0].requiredToCreate;
+            const requiredToDelete = result[0][0].requiredToDelete;
 
             client.setHighlightsEmoji(guild.id, emoji);
             client.setHighlightsChannel(guild.id, channel);
+            client.setHighlightsRequiredToCreate(guild.id, requiredToCreate);
+            client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
         }).catch(err => console.error(err));
+
+        const welcomeMessage = new WelcomeMessage();
+        return welcomeMessage.send(guild.systemChannel);
     }
 }
