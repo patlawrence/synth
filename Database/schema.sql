@@ -12,11 +12,38 @@ CREATE TABLE configs (
     color CHAR(7) DEFAULT '#FFFFFF'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE highlights (
+CREATE TABLE highlightsConfigs (
     guildID CHAR(18) NOT NULL,
     FOREIGN KEY (guildID) REFERENCES configs(guildID),
     emoji CHAR(47),
     channel CHAR(21),
     requiredToCreate SMALLINT(5) UNSIGNED DEFAULT 3,
     requiredToDelete SMALLINT(5) UNSIGNED DEFAULT 2
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE highlightsMessages (
+    guildID CHAR(18) NOT NULL,
+    FOREIGN KEY (guildID) REFERENCES configs(guildID),
+    channelID CHAR(18) NOT NULL,
+    messageID CHAR(18) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE levelsConfigs (
+    guildID CHAR(18) NOT NULL,
+    FOREIGN KEY (guildID) REFERENCES configs(guildID),
+    pointsGainRate FLOAT(3, 2)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE levelsPoints (
+    guildID CHAR(18) NOT NULL,
+    FOREIGN KEY (guildID) REFERENCES configs(guildID),
+    userID CHAR(18) NOT NULL,
+    level TINYINT(3) UNSIGNED DEFAULT 0,
+    points TINYINT(6) UNSIGNED DEFAULT 0
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE levelsRoles (
+    guildID CHAR(18) NOT NULL,
+    FOREIGN KEY (guildID) REFERENCES configs(guildID)
+
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
