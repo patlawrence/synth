@@ -9,7 +9,7 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO configs (guildID) VALUES('${guild.id}')`)
         .catch(err => console.error(err));
 
-        connection.query(`INSERT INTO highlights (guildID) VALUES('${guild.id}')`)
+        connection.query(`INSERT INTO highlightsConfigs (guildID) VALUES('${guild.id}')`)
         .catch(err => console.error(err));
 
         connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`)
@@ -21,7 +21,7 @@ module.exports = class extends Event {
             client.setColor(guild.id, color);
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guild.id}'`)
+        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlightsConfigs WHERE guildID = '${guild.id}'`)
         .then(result => {
             const emoji = result[0][0].emoji;
             const channel = result[0][0].channel;

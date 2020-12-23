@@ -23,15 +23,15 @@ CREATE TABLE highlightsConfigs (
 
 CREATE TABLE highlightsMessages (
     guildID CHAR(18) NOT NULL,
-    FOREIGN KEY (guildID) REFERENCES configs(guildID),
     channelID CHAR(18) NOT NULL,
-    messageID CHAR(18) NOT NULL
+    messageID CHAR(18) NOT NULL PRIMARY KEY,
+    emoji CHAR(47)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE levelsConfigs (
     guildID CHAR(18) NOT NULL,
     FOREIGN KEY (guildID) REFERENCES configs(guildID),
-    pointsGainRate FLOAT(3, 2)
+    pointsGainRate FLOAT(3, 2) DEFAULT 1
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE levelsPoints (

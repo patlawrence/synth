@@ -1,5 +1,5 @@
 const Event = require('../../Structures/Event.js');
-const { MessageEmbed } = require('discord.js');
+const { Collection, MessageEmbed } = require('discord.js');
 
 module.exports = class extends Event {
     async run(messageReaction, user) {
@@ -11,6 +11,7 @@ module.exports = class extends Event {
         const channel = client.getHighlightsChannel(guildID);
         const requiredToCreate = client.getHighlightsRequiredToCreate(guildID);
         const channels = message.guild.channels;
+        const connection = await require('../../Database/database.js');
         const embed = new MessageEmbed();
 
         if(message.partial) {  // partial messages are messages not in the cache
@@ -26,6 +27,15 @@ module.exports = class extends Event {
             if(messageReaction.count < requiredToCreate)
                 return;
 
+            connection.query(`INSERT INTO highlightsMessages (guildID, channelID, messageID) VALUES('${guildID}', '${message.channel.id}', '${message.id}')`);
+
+            if(!client.highlights.messages.has(guildID))
+                client.setHighlightsMessages(guildID, new Collection());
+
+            const highlightedMessages = client.getHighlightsMessages(guildID);
+
+            highlightedMessages.set(message.id, message.channel.id);
+
             const channelID = channel.substring(2, channel.length - 1);
             const highlightsChannel = channels.cache.get(channelID);
             const fetchedMessages = await highlightsChannel.messages.fetch({
@@ -36,8 +46,8 @@ module.exports = class extends Event {
 
             embed.setAuthor(`@${message.author.tag}`)
             .setThumbnail(message.author.displayAvatarURL())
-            .addField(message.content, `​\n${messageReaction.count} ${emoji} | #${message.channel.name} | [Jump](https://discordapp.com/channels/${guildID}/${message.channel.id}/${message.id})`, true) // there is a zero width character before \n
-            .setFooter(`${message.id} ${message.channel.id}`)
+            .addField(`​\n${message.content}`, `​\n${messageReaction.count} ${emoji} | #${message.channel.name} | [Jump](https://discordapp.com/channels/${guildID}/${message.channel.id}/${message.id})`, true) // there is a zero width character before \n
+            .setFooter(`${message.id}`)
             .setTimestamp(message.createdTimestamp)
             .setColor(color);
 

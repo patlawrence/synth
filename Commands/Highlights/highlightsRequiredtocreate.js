@@ -38,16 +38,16 @@ module.exports = class extends Command {
         if(args[0] == requiredToCreate)
             return this.argsMatchesRequiredToCreate(message, args);
 
-        connection.query(`UPDATE highlights SET requiredToCreate = '${args[0]}' WHERE guildID = '${guildID}'`)
+        connection.query(`UPDATE highlightsConfigs SET requiredToCreate = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
         client.setHighlightsRequiredToCreate(guildID, args[0]);
         requiredToCreate = client.getHighlightsRequiredToCreate(guildID);
 
-        var description = `✅ | **Reactions needed to create a highlight changed to:   ${requiredToCreate}**\n`;
+        var description = `✅ | **Reactions needed to create a highlight changed to: ${requiredToCreate}**\n`;
 
         if(requiredToDelete >= requiredToCreate) {
-            connection.query(`UPDATE highlights SET requiredToDelete = '${args[0] - 1}' WHERE guildID = '${guildID}'`)
+            connection.query(`UPDATE highlightsConfigs SET requiredToDelete = '${args[0] - 1}' WHERE guildID = '${guildID}'`)
             .catch(err => console.log(err));
 
             client.setHighlightsRequiredToDelete(guildID, args[0] - 1);

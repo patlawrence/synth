@@ -40,7 +40,7 @@ module.exports = class extends Event {
                     client.setPrefix(guild.id, prefix);
                     client.setColor(guild.id, color);
 
-                    connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guild.id}'`)
+                    connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlightsConfigs WHERE guildID = '${guild.id}'`)
                     .then(result => {
                         const emoji = result[0][0].emoji;
                         const channel = result[0][0].channel;
@@ -51,7 +51,20 @@ module.exports = class extends Event {
                         client.setHighlightsChannel(guild.id, channel);
                         client.setHighlightsRequiredToCreate(guild.id, requiredToCreate);
                         client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
+                    }).catch(err => console.error(err));
 
+                    connection.query(`SELECT channelID, messageID FROM highlightsMessages WHERE guildID = '${guild.id}'`)
+                    .then(result => {
+                        if(result.length)
+                            for(var i = 0; i < result[0].length; i++)
+                                client.setHighlightsMessages(guild.id, result[0][i].messageID, result[0][i].channelID);
+                    }).catch(err => console.error(err));
+
+                    connection.query(`SELECT pointsGainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+                    .then(result => {
+                        const pointsGainRate = result[0][0].pointsGainRate;
+
+                        client.setLevelsPointsGainRate(guild.id, pointsGainRate);
                     }).catch(err => console.error(err));
                 }
             }).catch(err => console.error(err));
@@ -64,7 +77,10 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO configs (guildID) VALUES('${guild.id}')`)
         .catch(err => console.error(err));
 
-        connection.query(`INSERT INTO highlights (guildID) VALUES('${guild.id}')`)
+        connection.query(`INSERT INTO highlightsConfigs (guildID) VALUES('${guild.id}')`)
+        .catch(err => console.error(err));
+
+        connection.query(`INSERT INTO levelsConfigs (guildID) VALUES('${guild.id}')`)
         .catch(err => console.error(err));
 
         connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`)
@@ -76,7 +92,7 @@ module.exports = class extends Event {
             client.setColor(guild.id, color);
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlights WHERE guildID = '${guild.id}'`)
+        connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlightsConfigs WHERE guildID = '${guild.id}'`)
         .then(result => {
             const emoji = result[0][0].emoji;
             const channel = result[0][0].channel;
@@ -89,8 +105,15 @@ module.exports = class extends Event {
             client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
         }).catch(err => console.error(err));
 
+        connection.query(`SELECT pointsGainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+        .then(result => {
+            const pointsGainRate = result[0][0].pointsGainRate;
+
+            client.setPointsGainRate(guild.id, pointsGainRate);
+        }).catch(err => console.error(err));
+
         const welcomeMessage = new WelcomeMessage();
-        return welcomeMessage.send(guild.systemChannel);
+        // return welcomeMessage.send(guild.systemChannel);
     }
 
     cleanDatabase(connection) { // guild is still in database if bot was kicked from server while bot was offline
@@ -109,7 +132,12 @@ module.exports = class extends Event {
     }
 
     deleteGuild(connection, guildID) {
-        connection.query(`DELETE FROM highlights WHERE guildID = '${guildID}'`)
+        connection.query(`DELETE FROM levelsConfigs WHERE guildID = '${guildID}'`)
+
+        connection.query(`DELETE FROM highlightsConfigs WHERE guildID = '${guildID}'`)
+        .catch(err => console.error(err));
+
+        connection.query(`DELETE FROM highlightsMessages WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
         connection.query(`DELETE FROM configs WHERE guildID = '${guildID}'`)

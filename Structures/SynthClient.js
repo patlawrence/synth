@@ -20,6 +20,11 @@ module.exports = class SynthClient extends Client {
 	    this.highlights.channels = new Collection();
 	    this.highlights.requiredToCreate = new Collection();
 	    this.highlights.requiredToDelete = new Collection();
+        this.highlights.messages = new Collection();
+        this.levels = [];
+        this.levels.pointsGainRate = new Collection();
+        this.levels.points = new Collection();
+        this.levels.roles = new Collection();
 	}
 
 	getCommand(name, beginningOfName) { // beginningOfName is for subcommands. this function will combine beginningOfName and name and search if it's provided
@@ -32,13 +37,18 @@ module.exports = class SynthClient extends Client {
 
 		return commands.get(name) || commands.find(command => !command.name.includes(' ') && command.aliases && command.aliases.includes(name));
 	}
-
 	getPrefix(guildID) { return this.prefixes.get(guildID); }
 	getColor(guildID) { return this.colors.get(guildID); }
 	getHighlightsEmoji(guildID) { return this.highlights.emojis.get(guildID); }
 	getHighlightsChannel(guildID) { return this.highlights.channels.get(guildID); }
 	getHighlightsRequiredToCreate(guildID) { return this.highlights.requiredToCreate.get(guildID); }
 	getHighlightsRequiredToDelete(guildID) { return this.highlights.requiredToDelete.get(guildID); }
+    getHighlightsMessages(guildID, messageID) {
+        if(typeof messageID != 'undefined')
+            return this.highlights.messages.get(guildID).get(messageID);
+        return this.highlights.messages.get(guildID);
+    }
+    getLevelsPointsGainRate(guildID) { return this.levels.pointsGainRate.get(guildID); }
 
 	setCommand(name, command) { this.commands.set(name, command); }
 	setPrefix(guildID, prefix) { this.prefixes.set(guildID, prefix); }
@@ -47,6 +57,12 @@ module.exports = class SynthClient extends Client {
 	setHighlightsChannel(guildID, channel) { this.highlights.channels.set(guildID, channel); }
 	setHighlightsRequiredToCreate(guildID, requiredToCreate) { this.highlights.requiredToCreate.set(guildID, requiredToCreate); }
 	setHighlightsRequiredToDelete(guildID, requiredToDelete) { this.highlights.requiredToDelete.set(guildID, requiredToDelete); }
+    setHighlightsMessages(guildID, messageID, channelID) {
+        if(typeof this.highlights.messages.get(guildID) == 'undefined')
+            this.highlights.messages.set(guildID, new Collection());
+        return this.getHighlightsMessages(guildID).set(messageID, channelID);
+    }
+    setLevelsPointsGainRate(guildID, pointsGainRate) { return this.levels.pointsGainRate.set(guildID, pointsGainRate); }
 
 	deletePrefix(guildID) { this.prefixes.delete(guildID); }
 	deleteColor(guildID) { this.colors.delete(guildID); }
@@ -54,6 +70,12 @@ module.exports = class SynthClient extends Client {
 	deleteHighlightsChannel(guildID) { this.highlights.channels.delete(guildID); }
 	deleteHighlightsRequiredToCreate(guildID) { this.highlights.requiredToCreate.delete(guildID); }
 	deleteHighlightsRequiredToDelete(guildID) { this.highlights.requiredToDelete.delete(guildID); }
+    deleteHighlightsMessages(guildID, messageID) {
+        if(typeof messageID == 'undefined')
+            return this.highlights.messages.delete(guildID);
+        return this.getHighlightsMessages(guildID).delete(messageID);
+    }
+    deleteLevelsPointsGainRate(guildID) { this.levels.pointsGainRate.delete(guildID); }
 
     login(token) {
         this.loadCommands();

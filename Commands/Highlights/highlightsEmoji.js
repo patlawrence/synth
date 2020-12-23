@@ -39,7 +39,7 @@ module.exports = class extends Command {
         if(args[0] == emoji)
             return this.argsMatchesEmoji(message, args);
 
-        connection.query(`UPDATE highlights SET emoji = '${args[0]}' WHERE guildID = '${guildID}'`)
+        connection.query(`UPDATE highlightsConfigs SET emoji = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
 
@@ -70,7 +70,7 @@ module.exports = class extends Command {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setDescription(`❕ | \`Highlights emoji is already set to:\`${args[0]}`)
+        embed.setDescription(`❕ | \`Highlights emoji is already set to:\` ${args[0]}`)
 		.setColor(color);
 
         return message.channel.send(embed);
