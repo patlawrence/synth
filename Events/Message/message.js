@@ -1,6 +1,7 @@
 const Event = require('../../Structures/Event.js');
 const CommandHandler = require('../../Structures/Command/CommandHandler.js');
 const CooldownManager = require('../../Structures/Command/CooldownManager.js');
+const LevelManager = require('../../Structures/LevelManager.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Event {
@@ -17,16 +18,19 @@ module.exports = class extends Event {
 
         const guildID = message.guild.id;
         const prefix = client.getPrefix(guildID);
+        const color = client.getColor(guildID);
 
         if(this.isBotTagged(message)) {
-            embed.setDescription(`**My prefix is currently set to: ${prefix}**`)
+            embed.setDescription(`**My prefix is currently set to:** ${prefix}`)
             .setColor(color);
 
             return message.channel.send(embed);
         }
 
-        if(!this.isMessageACommand(message))
-            return
+        if(!this.isMessageACommand(message)) {
+            const levelManager = new LevelManager();
+            return levelManager.addPoints(message);
+        }
 
         var args = this.getArgs(message);
 

@@ -21,7 +21,8 @@ module.exports = class extends Event {
             type: 'LISTENING'
         });
 
-        console.info(`Ready. Loaded ${commands.size} commands. logged in as ${user.tag}`);
+        console.info(`Loaded ${commands.size} commands across ${client.guilds.cache.size} servers. logged in as ${user.tag}`);
+        console.info(`Ready. Logged in as ${user.tag}`);
     }
 
     fillCaches(connection) {
@@ -60,11 +61,11 @@ module.exports = class extends Event {
                                 client.setHighlightsMessages(guild.id, result[0][i].messageID, result[0][i].channelID);
                     }).catch(err => console.error(err));
 
-                    connection.query(`SELECT pointsGainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+                    connection.query(`SELECT gainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
                     .then(result => {
-                        const pointsGainRate = result[0][0].pointsGainRate;
+                        const gainRate = result[0][0].gainRate;
 
-                        client.setLevelsPointsGainRate(guild.id, pointsGainRate);
+                        client.setLevelsGainRate(guild.id, gainRate);
                     }).catch(err => console.error(err));
                 }
             }).catch(err => console.error(err));
@@ -105,11 +106,11 @@ module.exports = class extends Event {
             client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT pointsGainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+        connection.query(`SELECT gainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
         .then(result => {
-            const pointsGainRate = result[0][0].pointsGainRate;
+            const gainRate = result[0][0].gainRate;
 
-            client.setPointsGainRate(guild.id, pointsGainRate);
+            client.setgainRate(guild.id, gainRate);
         }).catch(err => console.error(err));
 
         const welcomeMessage = new WelcomeMessage();

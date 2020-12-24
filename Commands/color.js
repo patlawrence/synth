@@ -35,7 +35,7 @@ module.exports = class extends Command {
             return this.colorMustBeHexCode(message);
 
         if(args[0] == color)
-            return this.argsMatchesColor(message);
+            return this.argsMatchesColor(message, args);
 
 		connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));

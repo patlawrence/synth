@@ -27,7 +27,7 @@ module.exports = class extends Command {
             return this.prefixTooLong(message);
 
         if(args == prefix)
-            return this.argsMatchesPrefix(message);
+            return this.argsMatchesPrefix(message, args);
 
 		connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));

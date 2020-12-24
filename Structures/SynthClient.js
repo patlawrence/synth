@@ -22,7 +22,8 @@ module.exports = class SynthClient extends Client {
 	    this.highlights.requiredToDelete = new Collection();
         this.highlights.messages = new Collection();
         this.levels = [];
-        this.levels.pointsGainRate = new Collection();
+        this.levels.gainRate = new Collection();
+        this.levels.levels = new Collection();
         this.levels.points = new Collection();
         this.levels.roles = new Collection();
 	}
@@ -48,7 +49,17 @@ module.exports = class SynthClient extends Client {
             return this.highlights.messages.get(guildID).get(messageID);
         return this.highlights.messages.get(guildID);
     }
-    getLevelsPointsGainRate(guildID) { return this.levels.pointsGainRate.get(guildID); }
+    getLevelsGainRate(guildID) { return this.levels.gainRate.get(guildID); }
+    getLevelsLevels(guildID, userID) {
+        if(typeof userID != 'undefined')
+            return this.levels.levels.get(guildID).get(messageID);
+        return this.levels.levels.get(guildID);
+    }
+    getLevelsPoints(guildID, userID) {
+        if(typeof userID != 'undefined')
+            return this.levels.points.get(guildID).get(messageID);
+        return this.levels.points.get(guildID);
+    }
 
 	setCommand(name, command) { this.commands.set(name, command); }
 	setPrefix(guildID, prefix) { this.prefixes.set(guildID, prefix); }
@@ -62,7 +73,17 @@ module.exports = class SynthClient extends Client {
             this.highlights.messages.set(guildID, new Collection());
         return this.getHighlightsMessages(guildID).set(messageID, channelID);
     }
-    setLevelsPointsGainRate(guildID, pointsGainRate) { return this.levels.pointsGainRate.set(guildID, pointsGainRate); }
+    setLevelsGainRate(guildID, gainRate) { return this.levels.gainRate.set(guildID, gainRate); }
+    setLevelsLevels(guildID, userID, level) {
+        if(typeof this.levels.levels.get(guildID) == 'undefined')
+            this.levels.levels.set(guildID, new Collection());
+        return this.getLevelsPoints(guildID).set(userID, points);
+    }
+    setLevelsPoints(guildID, userID, points) {
+        if(typeof this.levels.points.get(guildID) == 'undefined')
+            this.levels.points.set(guildID, new Collection());
+        return this.getLevelsPoints(guildID).set(userID, points);
+    }
 
 	deletePrefix(guildID) { this.prefixes.delete(guildID); }
 	deleteColor(guildID) { this.colors.delete(guildID); }
@@ -75,7 +96,17 @@ module.exports = class SynthClient extends Client {
             return this.highlights.messages.delete(guildID);
         return this.getHighlightsMessages(guildID).delete(messageID);
     }
-    deleteLevelsPointsGainRate(guildID) { this.levels.pointsGainRate.delete(guildID); }
+    deleteLevelsGainRate(guildID) { this.levels.gainRate.delete(guildID); }
+    deleteLevelsLevels(guildID, userID) {
+        if(typeof userID == 'undefined')
+            return this.levels.points.delete(guildID);
+        return this.getLevelsPoints(guildID).delete(messageID);
+    }
+    deleteLevelsPoints(guildID, userID) {
+        if(typeof userID == 'undefined')
+            return this.levels.points.delete(guildID);
+        return this.getLevelsPoints(guildID).delete(messageID);
+    }
 
     login(token) {
         this.loadCommands();

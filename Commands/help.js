@@ -7,7 +7,7 @@ module.exports = class extends Command {
         super(...args, {
             description: 'Lists all commands or info about a specific command',
             group: '💡 | Information',
-            aliases: ['h', 'commands', '?'],
+            aliases: ['h', 'commands', 'cmds', '?'],
             usage: '[command]'
         });
     }
@@ -53,7 +53,7 @@ module.exports = class extends Command {
 		}
 
 		const commandHandler = new CommandHandler();
-		const command = commandHandler.getCommand(message, args);
+		const command = commandHandler.handle(message, args);
 
 		if(!command)
 			return commandHandler.doNotUnderstand(message);
