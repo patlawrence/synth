@@ -23,7 +23,7 @@ module.exports = class extends Command {
         args.shift();
 
         if(!args.length) {
-            if(typeof emoji == 'null')
+            if(emoji == 'null')
                 this.emojiHasNotBeenSet(message);
 
             embed.setDescription(`Highlights emoji is currently: ${emoji}`)

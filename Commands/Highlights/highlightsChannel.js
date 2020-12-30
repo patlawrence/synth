@@ -23,7 +23,7 @@ module.exports = class extends Command {
         args.shift();
 
         if(!args.length) {
-            if(typeof channel == 'null')
+            if(channel == 'null')
                 this.channelHasNotBeenSet(message);
 
             embed.setDescription(`Highlights channel is currently: ${channel}`)
