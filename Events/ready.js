@@ -119,7 +119,9 @@ module.exports = class extends Event {
         }).catch(err => console.error(err));
 
         const welcomeMessage = new WelcomeMessage();
-        return welcomeMessage.send(guild.systemChannel);
+        
+        if(guild.systemChannel)
+            welcomeMessage.send(guild.systemChannel);
     }
 
     cleanDatabase(connection) { // guild is still in database if bot was kicked from server while bot was offline
