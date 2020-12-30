@@ -1,8 +1,8 @@
 CREATE DATABASE synth DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
 
-CREATE USER synth@'localhost' IDENTIFIED BY 'password';
+CREATE USER ubuntu@localhost IDENTIFIED BY 'nuQ9@3y!2GY4';
 
-GRANT SELECT, INSERT, UPDATE, DELETE, ALTER ON synth.* TO synth@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, ALTER ON synth.* TO ubuntu@localhost;
 
 USE synth;
 
