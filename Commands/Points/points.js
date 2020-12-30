@@ -6,7 +6,7 @@ module.exports = class extends Command {
         super(...args, {
             description: 'Shows info about points',
             group: '⚙️ | Settings',
-            aliases: ['pts', 'l' 'level', 'lvls', 'lvl', 'e', 'exp', 'xp'],
+            aliases: ['pts', 'l', 'level', 'lvls', 'lvl', 'e', 'exp', 'xp'],
             usage: '[command]'
         });
     }
