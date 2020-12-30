@@ -9,16 +9,16 @@ module.exports = class CommandHandler {
 		if(!command)
 			return;
 
-		var testCommand;
+		var newCommand;
 		var beginningOfName = `${command.name}`;
 
 		for(var i = 1; i < args.length; i++) {
-			testCommand = client.getCommand(args[i], beginningOfName);
+			newCommand = client.getCommand(args[i], beginningOfName);
 
-			if(!testCommand)
+			if(!newCommand)
 				break;
 
-			command = testCommand;
+			command = newCommand;
 			beginningOfName += ` ${command.name}`;
 		}
 

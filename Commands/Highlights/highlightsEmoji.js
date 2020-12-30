@@ -29,11 +29,11 @@ module.exports = class extends Command {
             return message.channel.send(embed);
         }
 
-        const twemoji = /\S/gu;
-        const guildEmoji = /<:\w{1,24}:\d{18}>/;
-        const animatedGuildEmoji = /<a:\w{1,24}:\d{18}>/;
+        const twemoji = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/;
+        const guildEmoji = /<:\w{1,22}:\d{17,20}>/;
+        const animatedGuildEmoji = /<a:\w{1,22}:\d{17,20}>/;
 
-        if(!(args[0].match(twemoji).splice(1, 1).length <= 1 || guildEmoji.test(args[0]) || animatedGuildEmoji.test(args[0])))
+        if(!(args[0].match(twemoji) || guildEmoji.test(args[0]) || animatedGuildEmoji.test(args[0])))
            return this.emojiMustBeEmoji(message);
 
         if(args[0] == emoji)

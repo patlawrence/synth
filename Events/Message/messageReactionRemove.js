@@ -11,7 +11,6 @@ module.exports = class extends Event {
         const channel = client.getHighlightsChannel(guildID);
         const requiredToDelete = client.getHighlightsRequiredToDelete(guildID);
         const channels = message.guild.channels;
-        const connection = await require('../../Database/database.js');
         const embed = new MessageEmbed();
 
         if(message.partial) { // partial messages are messages not in the cache
@@ -34,13 +33,12 @@ module.exports = class extends Event {
 
             if(highlightMessage) {
                 if(messageReaction.count <= requiredToDelete)
-                    connection.query(`DELETE FROM highlightsMessages WHERE messageID = '${message.id}'`);
                     return highlightMessage.delete();
 
                 embed.setAuthor(`@${message.author.tag}`)
                 .setThumbnail(message.author.displayAvatarURL())
                 .addField(message.content, `​\n${messageReaction.count} ${emoji} | #${message.channel.name} | [Jump](https://discordapp.com/channels/${guildID}/${message.channel.id}/${message.id})`, true) // there is a zero width character before \n
-                .setFooter(`${message.id}`)
+                .setFooter(`${message.id} ${message.channel.id}`)
                 .setTimestamp(message.createdTimestamp)
                 .setColor(color);
 

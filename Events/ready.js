@@ -54,19 +54,22 @@ module.exports = class extends Event {
                         client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
                     }).catch(err => console.error(err));
 
-                    connection.query(`SELECT channelID, messageID FROM highlightsMessages WHERE guildID = '${guild.id}'`)
-                    .then(result => {
-                        if(result.length)
-                            for(var i = 0; i < result[0].length; i++)
-                                client.setHighlightsMessages(guild.id, result[0][i].messageID, result[0][i].channelID);
-                    }).catch(err => console.error(err));
-
-                    connection.query(`SELECT gainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+                    connection.query(`SELECT gainRate, doRankUpAlert FROM levelsConfigs WHERE guildID = '${guild.id}'`)
                     .then(result => {
                         const gainRate = result[0][0].gainRate;
+                        const doRankUpAlert = result[0][0].doRankUpAlert;
 
                         client.setLevelsGainRate(guild.id, gainRate);
+                        client.setLevelsDoRankUpAlert(guild.id, doRankUpAlert);
                     }).catch(err => console.error(err));
+
+                    connection.query(`SELECT userID, \`rank\`, experience FROM levelsPoints WHERE guildID = '${guild.id}'`)
+                    .then(result => {
+                        for(var i = 0; i < result[0].length; i++) {
+                            client.setLevelsRank(guild.id, result[0][i].userID, result[0][i].rank);
+                            client.setLevelsExperience(guild.id, result[0][i].userID, result[0][i].experience);
+                        }
+                    });
                 }
             }).catch(err => console.error(err));
         });
@@ -106,15 +109,17 @@ module.exports = class extends Event {
             client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT gainRate FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+        connection.query(`SELECT gainRate, doRankUpAlert FROM levelsConfigs WHERE guildID = '${guild.id}'`)
         .then(result => {
             const gainRate = result[0][0].gainRate;
+            const doRankUpAlert = result[0][0].doRankUpAlert;
 
-            client.setgainRate(guild.id, gainRate);
+            client.setLevelsGainRate(guild.id, gainRate);
+            client.setLevelsDoRankUpAlert(guild.id, doRankUpAlert);
         }).catch(err => console.error(err));
 
         const welcomeMessage = new WelcomeMessage();
-        // return welcomeMessage.send(guild.systemChannel);
+        return welcomeMessage.send(guild.systemChannel);
     }
 
     cleanDatabase(connection) { // guild is still in database if bot was kicked from server while bot was offline
@@ -134,11 +139,12 @@ module.exports = class extends Event {
 
     deleteGuild(connection, guildID) {
         connection.query(`DELETE FROM levelsConfigs WHERE guildID = '${guildID}'`)
-
-        connection.query(`DELETE FROM highlightsConfigs WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        connection.query(`DELETE FROM highlightsMessages WHERE guildID = '${guildID}'`)
+        connection.query(`DELETE FROM levelsPoints WHERE guildID = '${guildID}'`)
+        .catch(err => console.error(err));
+
+        connection.query(`DELETE FROM highlightsConfigs WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
         connection.query(`DELETE FROM configs WHERE guildID = '${guildID}'`)

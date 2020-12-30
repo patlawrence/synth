@@ -4,6 +4,7 @@ module.exports = class extends Event {
     async run(message) {
         const client = this.client;
         const guildID = message.guild.id;
+        const emoji = client.getHighlightsEmoji(guildID);
         const channel = client.getHighlightsChannel(guildID);
         const channels = message.guild.channels;
 
@@ -20,5 +21,35 @@ module.exports = class extends Event {
             if(highlightMessage)
                 highlightMessage.delete();
         }
+
+        var footer;
+        if(message.embeds[0])
+            footer = message.embeds[0].footer;
+
+        const indexOfSpace = footer.text.indexOf(' ');
+        const highlightedMessageID = footer.text.substring(0, indexOfSpace);
+        const highlightedMessageChannelID = footer.text.substring(indexOfSpace + 1);
+
+        const highlightedMessageChannel = channels.resolve(highlightedMessageChannelID);
+
+        var highlightedMessage;
+        if(highlightedMessageChannel)
+            highlightedMessage = highlightedMessageChannel.messages.resolve(highlightedMessageID);
+
+        var emojiID;
+        if(emoji.includes('')) {
+            const firstColonIndex = emoji.indexOf(':');
+            const secondColonIndex = emoji.indexOf(':', firstColonIndex);
+
+            emojiID = emoji.substring(secondColonIndex, emoji.length - 1);
+        }
+
+        var highlightedMessageReaction;
+
+        if(highlightedMessage)
+            highlightedMessageReaction = highlightedMessage.reactions.resolve('❤️');
+
+        if(highlightedMessageReaction)
+            await highlightedMessageReaction.remove();
     }
 }

@@ -1,13 +1,15 @@
 const Event = require('../../Structures/Event.js');
 const CommandHandler = require('../../Structures/Command/CommandHandler.js');
 const CooldownManager = require('../../Structures/Command/CooldownManager.js');
-const LevelManager = require('../../Structures/LevelManager.js');
+const PointsManager = require('../../Structures/PointsManager.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Event {
     async run(message) {
         const client = this.client;
+        const commandHandler = new CommandHandler();
         const cooldownManager = new CooldownManager();
+        const pointsManager = new PointsManager();
         const embed = new MessageEmbed();
 
         if(this.isDM(message)) {
@@ -28,13 +30,11 @@ module.exports = class extends Event {
         }
 
         if(!this.isMessageACommand(message)) {
-            const levelManager = new LevelManager();
-            return levelManager.addPoints(message);
+            return pointsManager.addPoints(message);
         }
 
         var args = this.getArgs(message);
 
-        const commandHandler = new CommandHandler();
         const command = commandHandler.handle(message, args);
 
         if(!command)

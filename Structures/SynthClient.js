@@ -20,13 +20,15 @@ module.exports = class SynthClient extends Client {
 	    this.highlights.channels = new Collection();
 	    this.highlights.requiredToCreate = new Collection();
 	    this.highlights.requiredToDelete = new Collection();
-        this.highlights.messages = new Collection();
         this.levels = [];
-        this.levels.gainRate = new Collection();
-        this.levels.levels = new Collection();
-        this.levels.points = new Collection();
+        this.levels.gainRates = new Collection();
+        this.levels.doRankUpAlerts = new Collection();
+        this.levels.ranks = new Collection();
+        this.levels.experiences = new Collection();
         this.levels.roles = new Collection();
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 	getCommand(name, beginningOfName) { // beginningOfName is for subcommands. this function will combine beginningOfName and name and search if it's provided
 		const commands = this.commands;
@@ -44,21 +46,21 @@ module.exports = class SynthClient extends Client {
 	getHighlightsChannel(guildID) { return this.highlights.channels.get(guildID); }
 	getHighlightsRequiredToCreate(guildID) { return this.highlights.requiredToCreate.get(guildID); }
 	getHighlightsRequiredToDelete(guildID) { return this.highlights.requiredToDelete.get(guildID); }
-    getHighlightsMessages(guildID, messageID) {
-        if(typeof messageID != 'undefined')
-            return this.highlights.messages.get(guildID).get(messageID);
-        return this.highlights.messages.get(guildID);
-    }
-    getLevelsGainRate(guildID) { return this.levels.gainRate.get(guildID); }
-    getLevelsLevels(guildID, userID) {
+    getLevelsGainRate(guildID) { return this.levels.gainRates.get(guildID); }
+    getLevelsDoRankUpAlert(guildID) { return this.levels.doRankUpAlerts.get(guildID); }
+    getLevelsRank(guildID, userID) {
         if(typeof userID != 'undefined')
-            return this.levels.levels.get(guildID).get(messageID);
-        return this.levels.levels.get(guildID);
+            return this.levels.ranks.get(guildID).get(userID);
+        if(typeof this.levels.ranks.get(guildID) == 'undefined')
+            this.levels.ranks.set(guildID, new Collection())
+        return this.levels.ranks.get(guildID);
     }
-    getLevelsPoints(guildID, userID) {
+    getLevelsExperience(guildID, userID) {
         if(typeof userID != 'undefined')
-            return this.levels.points.get(guildID).get(messageID);
-        return this.levels.points.get(guildID);
+            return this.levels.experiences.get(guildID).get(userID);
+        if(typeof this.levels.experiences.get(guildID) == 'undefined')
+            this.levels.experiences.set(guildID, new Collection())
+        return this.levels.experiences.get(guildID);
     }
 
 	setCommand(name, command) { this.commands.set(name, command); }
@@ -68,45 +70,39 @@ module.exports = class SynthClient extends Client {
 	setHighlightsChannel(guildID, channel) { this.highlights.channels.set(guildID, channel); }
 	setHighlightsRequiredToCreate(guildID, requiredToCreate) { this.highlights.requiredToCreate.set(guildID, requiredToCreate); }
 	setHighlightsRequiredToDelete(guildID, requiredToDelete) { this.highlights.requiredToDelete.set(guildID, requiredToDelete); }
-    setHighlightsMessages(guildID, messageID, channelID) {
-        if(typeof this.highlights.messages.get(guildID) == 'undefined')
-            this.highlights.messages.set(guildID, new Collection());
-        return this.getHighlightsMessages(guildID).set(messageID, channelID);
+    setLevelsGainRate(guildID, gainRate) { return this.levels.gainRates.set(guildID, gainRate); }
+    setLevelsDoRankUpAlert(guildID, doRankUpAlert) { return this.levels.doRankUpAlerts.set(guildID, doRankUpAlert); }
+    setLevelsRank(guildID, userID, rank) {
+        if(typeof this.levels.ranks.get(guildID) == 'undefined')
+            this.levels.ranks.set(guildID, new Collection());
+        return this.getLevelsRank(guildID).set(userID, rank);
     }
-    setLevelsGainRate(guildID, gainRate) { return this.levels.gainRate.set(guildID, gainRate); }
-    setLevelsLevels(guildID, userID, level) {
-        if(typeof this.levels.levels.get(guildID) == 'undefined')
-            this.levels.levels.set(guildID, new Collection());
-        return this.getLevelsPoints(guildID).set(userID, points);
-    }
-    setLevelsPoints(guildID, userID, points) {
-        if(typeof this.levels.points.get(guildID) == 'undefined')
-            this.levels.points.set(guildID, new Collection());
-        return this.getLevelsPoints(guildID).set(userID, points);
+    setLevelsExperience(guildID, userID, experience) {
+        if(typeof this.levels.experiences.get(guildID) == 'undefined')
+            this.levels.experiences.set(guildID, new Collection());
+        return this.getLevelsExperience(guildID).set(userID, experience);
     }
 
-	deletePrefix(guildID) { this.prefixes.delete(guildID); }
-	deleteColor(guildID) { this.colors.delete(guildID); }
-	deleteHighlightsEmoji(guildID) { this.highlights.emojis.delete(guildID); }
-	deleteHighlightsChannel(guildID) { this.highlights.channels.delete(guildID); }
-	deleteHighlightsRequiredToCreate(guildID) { this.highlights.requiredToCreate.delete(guildID); }
-	deleteHighlightsRequiredToDelete(guildID) { this.highlights.requiredToDelete.delete(guildID); }
-    deleteHighlightsMessages(guildID, messageID) {
-        if(typeof messageID == 'undefined')
-            return this.highlights.messages.delete(guildID);
-        return this.getHighlightsMessages(guildID).delete(messageID);
-    }
-    deleteLevelsGainRate(guildID) { this.levels.gainRate.delete(guildID); }
-    deleteLevelsLevels(guildID, userID) {
+	deletePrefix(guildID) { return this.prefixes.delete(guildID); }
+	deleteColor(guildID) { return this.colors.delete(guildID); }
+	deleteHighlightsEmoji(guildID) { return this.highlights.emojis.delete(guildID); }
+	deleteHighlightsChannel(guildID) { return this.highlights.channels.delete(guildID); }
+	deleteHighlightsRequiredToCreate(guildID) { return this.highlights.requiredToCreate.delete(guildID); }
+	deleteHighlightsRequiredToDelete(guildID) { return this.highlights.requiredToDelete.delete(guildID); }
+    deleteLevelsGainRate(guildID) { return this.levels.gainRates.delete(guildID); }
+    deleteLevelsDoRankUpAlert(guildID) { return this.levels.delete(guildID); }
+    deleteLevelsRank(guildID, userID) {
         if(typeof userID == 'undefined')
-            return this.levels.points.delete(guildID);
-        return this.getLevelsPoints(guildID).delete(messageID);
+            return this.levels.ranks.delete(guildID);
+        return this.getLevelsRank(guildID).delete(messageID);
     }
-    deleteLevelsPoints(guildID, userID) {
+    deleteLevelsExperience(guildID, userID) {
         if(typeof userID == 'undefined')
-            return this.levels.points.delete(guildID);
-        return this.getLevelsPoints(guildID).delete(messageID);
+            return this.levels.experiences.delete(guildID);
+        return this.getLevelsExperience(guildID).delete(messageID);
     }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
     login(token) {
         this.loadCommands();
@@ -126,26 +122,26 @@ module.exports = class SynthClient extends Client {
 				delete require.cache[commandFile];
 				const { name } = path.parse(commandFile);
 				const file = require(commandFile);
-				var adjustedName = '';
+				var newName = '';
 
 				for(var i = 0; i < name.length; i++)
 					if(name.charCodeAt(i) > 64 && name.charCodeAt(i) < 91) // if character is uppercase
-						adjustedName = `${name.substring(0, i)} ${name.substring(i)}`.toLowerCase();
+						newName = `${name.substring(0, i)} ${name.substring(i)}`.toLowerCase();
 
-				adjustedName.toLowerCase();
+				newName.toLowerCase();
 
-				if(!adjustedName)
-					adjustedName = name;
+				if(!newName)
+					newName = name;
 
 				if(!this.isClass(file))
 					throw new TypeError(`Command ${name} doesn't export a class`);
 
-				const command = new file(this, adjustedName);
+				const command = new file(this, newName);
 
 				if(!(command instanceof Command))
 					throw new TypeError(`Command ${name} doesn't belong in Commands`);
 
-				this.setCommand(adjustedName, command);
+				this.setCommand(newName, command);
 			}
 		});
 	}

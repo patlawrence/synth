@@ -29,8 +29,6 @@ module.exports = class extends Command {
             return message.channel.send(embed);
         }
 
-        const float = /(\d[.,]\d\d)/;
-
         if(args[0] <= 0 && args[0] >= 10)
             return this.gainRateNotInRange(message);
 
@@ -43,7 +41,7 @@ module.exports = class extends Command {
         client.setLevelsGainRate(guildID, args[0]);
         gainRate = client.getLevelsGainRate(guildID);
 
-        embed.setDescription(`✅ | **The rate users gain levels changed to:** ${gainRate}`)
+        embed.setDescription(`✅ | **The rate users gain levels changed to: ${gainRate}**`)
         .setColor(color);
 
 		return message.channel.send(embed);
