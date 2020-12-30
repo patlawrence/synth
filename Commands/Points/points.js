@@ -4,9 +4,9 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            description: 'Shows info about levels',
+            description: 'Shows info about points',
             group: '⚙️ | Settings',
-            aliases: ['l', 'level', 'lvls', 'lvl', 'exp', 'xp'],
+            aliases: ['pts', 'l' 'level', 'lvls', 'lvl', 'e', 'exp', 'xp'],
             usage: '[command]'
         });
     }
@@ -18,9 +18,9 @@ module.exports = class extends Command {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setTitle('ℹ️ | Levels')
+        embed.setTitle('ℹ️ | Points')
         .setDescription([
-            '**Levels can show you who\'s the chattiest in your server**\n When you send a message, you\'ll get some points. 😃 Once you have enough points, you\'ll level up! 🤩 I\'ll even give you a role when you reach a certain levels 😏\n',
+            '**Points can show you who\'s the chattiest in your server**\n When you send a message, you\'ll get some experience. 😃 Once you have enough experience, you\'ll level up! 🤩 I\'ll even give you a role when you reach a certain levels 😏\n',
             `​\nHere are the settings you can customize for ${this.name} 🛠️\n`,
             '​'
         ].join(''))

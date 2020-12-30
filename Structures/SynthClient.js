@@ -20,12 +20,12 @@ module.exports = class SynthClient extends Client {
 	    this.highlights.channels = new Collection();
 	    this.highlights.requiredToCreate = new Collection();
 	    this.highlights.requiredToDelete = new Collection();
-        this.levels = [];
-        this.levels.gainRates = new Collection();
-        this.levels.doRankUpAlerts = new Collection();
-        this.levels.ranks = new Collection();
-        this.levels.experiences = new Collection();
-        this.levels.roles = new Collection();
+        this.points = [];
+        this.points.gainRates = new Collection();
+        this.points.doLevelUpAlerts = new Collection();
+        this.points.levels = new Collection();
+        this.points.experiences = new Collection();
+        this.points.roles = new Collection();
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,21 +46,21 @@ module.exports = class SynthClient extends Client {
 	getHighlightsChannel(guildID) { return this.highlights.channels.get(guildID); }
 	getHighlightsRequiredToCreate(guildID) { return this.highlights.requiredToCreate.get(guildID); }
 	getHighlightsRequiredToDelete(guildID) { return this.highlights.requiredToDelete.get(guildID); }
-    getLevelsGainRate(guildID) { return this.levels.gainRates.get(guildID); }
-    getLevelsDoRankUpAlert(guildID) { return this.levels.doRankUpAlerts.get(guildID); }
-    getLevelsRank(guildID, userID) {
+    getPointsGainRate(guildID) { return this.points.gainRates.get(guildID); }
+    getPointsDoLevelUpAlert(guildID) { return this.points.doLevelUpAlerts.get(guildID); }
+    getPointsLevel(guildID, userID) {
         if(typeof userID != 'undefined')
-            return this.levels.ranks.get(guildID).get(userID);
-        if(typeof this.levels.ranks.get(guildID) == 'undefined')
-            this.levels.ranks.set(guildID, new Collection())
-        return this.levels.ranks.get(guildID);
+            return this.points.levels.get(guildID).get(userID);
+        if(typeof this.points.levels.get(guildID) == 'undefined')
+            this.points.levels.set(guildID, new Collection())
+        return this.points.levels.get(guildID);
     }
-    getLevelsExperience(guildID, userID) {
+    getPointsExperience(guildID, userID) {
         if(typeof userID != 'undefined')
-            return this.levels.experiences.get(guildID).get(userID);
-        if(typeof this.levels.experiences.get(guildID) == 'undefined')
-            this.levels.experiences.set(guildID, new Collection())
-        return this.levels.experiences.get(guildID);
+            return this.points.experiences.get(guildID).get(userID);
+        if(typeof this.points.experiences.get(guildID) == 'undefined')
+            this.points.experiences.set(guildID, new Collection())
+        return this.points.experiences.get(guildID);
     }
 
 	setCommand(name, command) { this.commands.set(name, command); }
@@ -70,17 +70,17 @@ module.exports = class SynthClient extends Client {
 	setHighlightsChannel(guildID, channel) { this.highlights.channels.set(guildID, channel); }
 	setHighlightsRequiredToCreate(guildID, requiredToCreate) { this.highlights.requiredToCreate.set(guildID, requiredToCreate); }
 	setHighlightsRequiredToDelete(guildID, requiredToDelete) { this.highlights.requiredToDelete.set(guildID, requiredToDelete); }
-    setLevelsGainRate(guildID, gainRate) { return this.levels.gainRates.set(guildID, gainRate); }
-    setLevelsDoRankUpAlert(guildID, doRankUpAlert) { return this.levels.doRankUpAlerts.set(guildID, doRankUpAlert); }
-    setLevelsRank(guildID, userID, rank) {
-        if(typeof this.levels.ranks.get(guildID) == 'undefined')
-            this.levels.ranks.set(guildID, new Collection());
-        return this.getLevelsRank(guildID).set(userID, rank);
+    setPointsGainRate(guildID, gainRate) { return this.points.gainRates.set(guildID, gainRate); }
+    setPointsDoLevelUpAlert(guildID, doLevelUpAlert) { return this.points.doLevelUpAlerts.set(guildID, doLevelUpAlert); }
+    setPointsLevel(guildID, userID, level) {
+        if(typeof this.getPointsLevel(guildID) == 'undefined')
+            this.points.levels.set(guildID, new Collection());
+        return this.getPointsLevel(guildID).set(userID, level);
     }
-    setLevelsExperience(guildID, userID, experience) {
-        if(typeof this.levels.experiences.get(guildID) == 'undefined')
-            this.levels.experiences.set(guildID, new Collection());
-        return this.getLevelsExperience(guildID).set(userID, experience);
+    setPointsExperience(guildID, userID, experience) {
+        if(typeof this.getPointsExperience(guildID) == 'undefined')
+            this.points.experiences.set(guildID, new Collection());
+        return this.getPointsExperience(guildID).set(userID, experience);
     }
 
 	deletePrefix(guildID) { return this.prefixes.delete(guildID); }
@@ -89,17 +89,17 @@ module.exports = class SynthClient extends Client {
 	deleteHighlightsChannel(guildID) { return this.highlights.channels.delete(guildID); }
 	deleteHighlightsRequiredToCreate(guildID) { return this.highlights.requiredToCreate.delete(guildID); }
 	deleteHighlightsRequiredToDelete(guildID) { return this.highlights.requiredToDelete.delete(guildID); }
-    deleteLevelsGainRate(guildID) { return this.levels.gainRates.delete(guildID); }
-    deleteLevelsDoRankUpAlert(guildID) { return this.levels.delete(guildID); }
-    deleteLevelsRank(guildID, userID) {
+    deletePointsGainRate(guildID) { return this.points.gainRates.delete(guildID); }
+    deletePointsDoLevelUpAlert(guildID) { return this.points.doLevelUpAlerts.delete(guildID); }
+    deletePointsLevel(guildID, userID) {
         if(typeof userID == 'undefined')
-            return this.levels.ranks.delete(guildID);
-        return this.getLevelsRank(guildID).delete(messageID);
+            return this.points.levels.delete(guildID);
+        return this.getPointsLevel(guildID).delete(messageID);
     }
-    deleteLevelsExperience(guildID, userID) {
+    deletePointsExperience(guildID, userID) {
         if(typeof userID == 'undefined')
-            return this.levels.experiences.delete(guildID);
-        return this.getLevelsExperience(guildID).delete(messageID);
+            return this.points.experiences.delete(guildID);
+        return this.getPointsExperience(guildID).delete(messageID);
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -6,8 +6,8 @@ module.exports = class PointsManager {
         const guildID = message.guild.id;
         const authorID = message.author.id;
         const color = client.getColor(guildID);
-        const gainRate = client.getLevelsGainRate(guildID);
-        const doRankUpAlert = client.getLevelsDoRankUpAlert(guildID);
+        const gainRate = client.getPointsGainRate(guildID);
+        const doLevelUpAlert = client.getPointsDoLevelUpAlert(guildID);
         const connection = await require('../Database/database.js');
         const embed = new MessageEmbed();
 
@@ -15,41 +15,41 @@ module.exports = class PointsManager {
             return;
 
         if(!this.isUserInCache(message)) {
-            client.setLevelsRank(guildID, authorID, 1);
-            client.setLevelsExperience(guildID, authorID, 0);
+            client.setPointsLevel(guildID, authorID, 1);
+            client.setPointsExperience(guildID, authorID, 0);
 
-            return connection.query(`INSERT INTO LevelsPoints (guildID, userID, \`rank\`, experience) VALUES('${guildID}', '${authorID}', '1', '0')`)
+            return connection.query(`INSERT INTO points (guildID, userID, level, experience) VALUES('${guildID}', '${authorID}', '1', '0')`)
             .catch(err => console.error(err));
         }
 
-        var rank = client.getLevelsRank(guildID, authorID);
-        var experience = client.getLevelsExperience(guildID, authorID);
+        var level = client.getPointsLevel(guildID, authorID);
+        var experience = client.getPointsExperience(guildID, authorID);
 
         const experienceGained = Math.floor((Math.random() * 10 + 1) * gainRate);
-        const experienceNeededToRankUp = Math.floor(200 * Math.pow(67 / 64, rank - 1)); // geometric sequence
+        const experienceNeededToLevelUp = Math.floor(200 * Math.pow(67 / 64, level - 1)); // geometric sequence
 
         var newExperience = experience + experienceGained;
-        var newRank = rank;
-        var rankedUp = false;
+        var newLevel = level;
+        var leveledUp = false;
 
-        if(newExperience >= experienceNeededToRankUp) {
-            newExperience -= experienceNeededToRankUp;
-            newRank++;
+        if(newExperience >= experienceNeededToLevelUp) {
+            newExperience -= experienceNeededToLevelUp;
+            newLevel++;
 
-            rankedUp = true;
+            leveledUp = true;
         }
 
-        connection.query(`UPDATE levelsPoints SET \`rank\` = '${newRank}', experience = '${newExperience}' WHERE guildID = '${guildID}' AND userID = '${authorID}'`)
+        connection.query(`UPDATE points SET level = '${newLevel}', experience = '${newExperience}' WHERE guildID = '${guildID}' AND userID = '${authorID}'`)
         .catch(err => console.error(err));
 
-        client.setLevelsRank(guildID, authorID, newRank);
-        rank = client.getLevelsRank(guildID, authorID);
+        client.setPointsLevel(guildID, authorID, newLevel);
+        level = client.getPointsLevel(guildID, authorID);
 
-        client.setLevelsExperience(guildID, authorID, newExperience);
-        experience = client.getLevelsExperience(guildID, authorID);
+        client.setPointsExperience(guildID, authorID, newExperience);
+        experience = client.getPointsExperience(guildID, authorID);
 
-        if(rankedUp && doRankUpAlert)
-            this.userRankedUp(message);
+        if(leveledUp && doLevelUpAlert)
+            this.userLeveledUp(message);
     }
 
     isUserInCache(message) {
@@ -57,20 +57,20 @@ module.exports = class PointsManager {
         const guildID = message.guild.id;
         const authorID = message.author.id;
 
-        if(client.getLevelsRank(guildID).has(authorID) && client.getLevelsExperience(guildID).has(authorID))
+        if(client.getPointsLevel(guildID).has(authorID) && client.getPointsExperience(guildID).has(authorID))
             return true;
         return false;
     }
 
-    userRankedUp(message) {
+    userLeveledUp(message) {
         const client = message.client;
         const guildID = message.guild.id;
         const authorID = message.author.id;
         const color = client.getColor(guildID);
-        const rank = client.getLevelsRank(guildID, authorID);
+        const level = client.getPointsLevel(guildID, authorID);
         const embed = new MessageEmbed();
 
-        embed.setDescription(`🎉 | **Hey ${message.author.tag}! You just ranked up. 🥳 You're now rank ${rank}**`)
+        embed.setDescription(`🎉 | **Hey ${message.author.tag}! You just leveled up. 🥳 You're now level ${level}**`)
         .setColor(color);
 
         return message.channel.send(embed);

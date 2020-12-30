@@ -8,7 +8,7 @@ module.exports = class extends Command {
             group: '⚙️ | Settings',
             aliases: ['c'],
             usage: '[channel tag]',
-            cooldown: 15
+            cooldown: 10
         });
     }
 
@@ -23,6 +23,9 @@ module.exports = class extends Command {
         args.shift();
 
         if(!args.length) {
+            if(typeof channel == 'null')
+                this.channelHasNotBeenSet(message);
+
             embed.setDescription(`Highlights channel is currently: ${channel}`)
             .setColor(color);
 
@@ -47,6 +50,18 @@ module.exports = class extends Command {
         .setColor(color);
 
 		return message.channel.send(embed);
+    }
+
+    channelHasNotBeenSet(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('❕ | **Highlights channel has not been set**')
+        .setColor(color);
+
+        return message.channel.send(embed);
     }
 
     channelMustBeTag(message) {

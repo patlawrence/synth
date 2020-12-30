@@ -54,20 +54,20 @@ module.exports = class extends Event {
                         client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
                     }).catch(err => console.error(err));
 
-                    connection.query(`SELECT gainRate, doRankUpAlert FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+                    connection.query(`SELECT gainRate, doLevelUpAlert FROM pointsConfigs WHERE guildID = '${guild.id}'`)
                     .then(result => {
                         const gainRate = result[0][0].gainRate;
-                        const doRankUpAlert = result[0][0].doRankUpAlert;
+                        const doLevelUpAlert = result[0][0].doLevelUpAlert;
 
-                        client.setLevelsGainRate(guild.id, gainRate);
-                        client.setLevelsDoRankUpAlert(guild.id, doRankUpAlert);
+                        client.setPointsGainRate(guild.id, gainRate);
+                        client.setPointsDoLevelUpAlert(guild.id, doLevelUpAlert);
                     }).catch(err => console.error(err));
 
-                    connection.query(`SELECT userID, \`rank\`, experience FROM levelsPoints WHERE guildID = '${guild.id}'`)
+                    connection.query(`SELECT userID, level, experience FROM points WHERE guildID = '${guild.id}'`)
                     .then(result => {
                         for(var i = 0; i < result[0].length; i++) {
-                            client.setLevelsRank(guild.id, result[0][i].userID, result[0][i].rank);
-                            client.setLevelsExperience(guild.id, result[0][i].userID, result[0][i].experience);
+                            client.setPointsLevel(guild.id, result[0][i].userID, result[0][i].level);
+                            client.setPointsExperience(guild.id, result[0][i].userID, result[0][i].experience);
                         }
                     });
                 }
@@ -84,7 +84,7 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO highlightsConfigs (guildID) VALUES('${guild.id}')`)
         .catch(err => console.error(err));
 
-        connection.query(`INSERT INTO levelsConfigs (guildID) VALUES('${guild.id}')`)
+        connection.query(`INSERT INTO pointsConfigs (guildID) VALUES('${guild.id}')`)
         .catch(err => console.error(err));
 
         connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`)
@@ -109,13 +109,13 @@ module.exports = class extends Event {
             client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
         }).catch(err => console.error(err));
 
-        connection.query(`SELECT gainRate, doRankUpAlert FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+        connection.query(`SELECT gainRate, doLevelUpAlert FROM pointsConfigs WHERE guildID = '${guild.id}'`)
         .then(result => {
             const gainRate = result[0][0].gainRate;
-            const doRankUpAlert = result[0][0].doRankUpAlert;
+            const doLevelUpAlert = result[0][0].doLevelUpAlert;
 
-            client.setLevelsGainRate(guild.id, gainRate);
-            client.setLevelsDoRankUpAlert(guild.id, doRankUpAlert);
+            client.setPointsGainRate(guild.id, gainRate);
+            client.setPointsDoLevelUpAlert(guild.id, doLevelUpAlert);
         }).catch(err => console.error(err));
 
         const welcomeMessage = new WelcomeMessage();
@@ -138,10 +138,10 @@ module.exports = class extends Event {
     }
 
     deleteGuild(connection, guildID) {
-        connection.query(`DELETE FROM levelsConfigs WHERE guildID = '${guildID}'`)
+        connection.query(`DELETE FROM pointsConfigs WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        connection.query(`DELETE FROM levelsPoints WHERE guildID = '${guildID}'`)
+        connection.query(`DELETE FROM points WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
         connection.query(`DELETE FROM highlightsConfigs WHERE guildID = '${guildID}'`)

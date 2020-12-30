@@ -12,6 +12,9 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO highlightsConfigs (guildID) VALUES('${guild.id}')`)
         .catch(err => console.error(err));
 
+        connection.query(`INSERT INTO pointsConfigs (guildID) VALUES('${guild.id}')`)
+        .catch(err => console.error(err));
+
         connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`)
         .then(result => {
             const prefix = result[0][0].prefix;
@@ -32,6 +35,16 @@ module.exports = class extends Event {
             client.setHighlightsChannel(guild.id, channel);
             client.setHighlightsRequiredToCreate(guild.id, requiredToCreate);
             client.setHighlightsRequiredToDelete(guild.id, requiredToDelete);
+        }).catch(err => console.error(err));
+
+        connection.query(`SELECT gainRate, doLevelUpAlert FROM pointsConfigs WHERE guildID = '${guild.id}'`)
+        .then(result => {
+            const gainRate = result[0][0].gainRate;
+            const doLevelUpAlert = result[0][0].doLevelUpAlert;
+
+            client.setPointsGainRate(guild.id, gainRate);
+            client.setPointsDoLevelUpAlert(guild.id, doLevelUpAlert);
+
         }).catch(err => console.error(err));
 
         const welcomeMessage = new WelcomeMessage();

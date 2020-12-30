@@ -5,10 +5,10 @@ module.exports = class extends Event {
         const client = this.client;
         const connection = await require('../../Database/database.js');
 
-        connection.query(`DELETE FROM levelsConfigs WHERE guildID = '${guild.id}'`)
+        connection.query(`DELETE FROM pointsConfigs WHERE guildID = '${guild.id}'`)
         .catch(err => console.error(err));
 
-        connection.query(`DELETE FROM levelsPoints WHERE guildID = '${guild.id}'`)
+        connection.query(`DELETE FROM points WHERE guildID = '${guild.id}'`)
         .catch(err => console.error(err));
 
         connection.query(`DELETE FROM highlightsConfigs WHERE guildID = '${guild.id}'`)
@@ -23,9 +23,9 @@ module.exports = class extends Event {
         client.deleteHighlightsChannel(guild.id);
         client.deleteHighlightsRequiredToCreate(guild.id);
         client.deleteHighlightsRequiredToDelete(guild.id);
-        client.deleteLevelsGainRate(guild.id);
-        client.deleteLevelsDoRankUpAlert(guild.id);
-        client.deleteLevelsRank(guild.id);
-        client.deleteLevelsExperience(guild.id);
+        client.deletePointsGainRate(guild.id);
+        client.deletePointsDoLevelUpAlert(guild.id);
+        client.deletePointsLevel(guild.id);
+        client.deletePointsExperience(guild.id);
     }
 }

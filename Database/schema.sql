@@ -1,6 +1,6 @@
 CREATE DATABASE synth DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
 
-CREATE USER ubuntu@localhost IDENTIFIED BY 'nuQ9@3y!2GY4';
+CREATE USER ubuntu@localhost IDENTIFIED BY 'password';
 
 GRANT SELECT, INSERT, UPDATE, DELETE, ALTER ON synth.* TO ubuntu@localhost;
 
@@ -21,21 +21,21 @@ CREATE TABLE highlightsConfigs (
     requiredToDelete SMALLINT(5) UNSIGNED DEFAULT 2
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE levelsConfigs (
+CREATE TABLE pointsConfigs (
     guildID CHAR(20) NOT NULL,
     FOREIGN KEY (guildID) REFERENCES configs(guildID),
     gainRate FLOAT(3, 2) DEFAULT 1,
-    doRankUpAlert BOOLEAN DEFAULT 0
+    doLevelUpAlert BOOLEAN DEFAULT 0
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE levelsPoints (
+CREATE TABLE points (
     guildID CHAR(20) NOT NULL,
     userID CHAR(20) NOT NULL,
-    `rank` TINYINT(3) UNSIGNED DEFAULT 1,
+    level TINYINT(3) UNSIGNED DEFAULT 1,
     experience TINYINT(6) UNSIGNED DEFAULT 0
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE levelsRoles (
+CREATE TABLE pointsRoles (
     guildID CHAR(20) NOT NULL,
     FOREIGN KEY (guildID) REFERENCES configs(guildID)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;

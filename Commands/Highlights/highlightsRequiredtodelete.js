@@ -8,7 +8,7 @@ module.exports = class extends Command {
             group: '⚙️ | Settings',
             aliases: ['rtd','rfd'],
             usage: '[number]',
-            cooldown: 15
+            cooldown: 10
         });
     }
 

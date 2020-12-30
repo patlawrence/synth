@@ -8,7 +8,7 @@ module.exports = class extends Command {
             group: '⚙️ | Settings',
             aliases: ['e'],
             usage: '[emoji]',
-            cooldown: 15
+            cooldown: 10
         });
     }
 
@@ -23,6 +23,9 @@ module.exports = class extends Command {
         args.shift();
 
         if(!args.length) {
+            if(typeof emoji == 'null')
+                this.emojiHasNotBeenSet(message);
+
             embed.setDescription(`Highlights emoji is currently: ${emoji}`)
             .setColor(color);
 
@@ -50,6 +53,18 @@ module.exports = class extends Command {
         .setColor(color);
 
 		return message.channel.send(embed);
+    }
+
+    emojiHasNotBeenSet(message) {
+        const client = message.client;
+        const guildID = message.guild.id;
+        const color = client.getColor(guildID);
+        const embed = new MessageEmbed();
+
+        embed.setDescription('❕ | **Highlights emoji has not been set**')
+        .setColor(color);
+
+        return message.channel.send(embed);
     }
 
     emojiMustBeEmoji(message) {

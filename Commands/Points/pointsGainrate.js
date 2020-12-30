@@ -8,7 +8,7 @@ module.exports = class extends Command {
             group: '⚙️ | Settings',
             aliases: ['gr', 'r'],
             usage: '[multiplier]',
-            cooldown: 15
+            cooldown: 10
         });
     }
 
@@ -16,7 +16,7 @@ module.exports = class extends Command {
         const client = this.client;
         const guildID = message.guild.id;
         const color = client.getColor(guildID);
-        var gainRate = client.getLevelsGainRate(guildID);
+        var gainRate = client.getPointsGainRate(guildID);
         const connection = await require('../../Database/database.js');
         const embed = new MessageEmbed();
 
@@ -35,11 +35,11 @@ module.exports = class extends Command {
         if(args[0] == gainRate)
             return this.argsMatchesGainRate(message, args);
 
-        connection.query(`UPDATE levelsConfigs SET gainRate = '${args[0]}' WHERE guildID = '${guildID}'`)
+        connection.query(`UPDATE pointsConfigs SET gainRate = '${args[0]}' WHERE guildID = '${guildID}'`)
         .catch(err => console.error(err));
 
-        client.setLevelsGainRate(guildID, args[0]);
-        gainRate = client.getLevelsGainRate(guildID);
+        client.setPointsGainRate(guildID, args[0]);
+        gainRate = client.getPointsGainRate(guildID);
 
         embed.setDescription(`✅ | **The rate users gain levels changed to: ${gainRate}**`)
         .setColor(color);

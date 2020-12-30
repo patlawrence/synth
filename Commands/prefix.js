@@ -8,7 +8,7 @@ module.exports = class extends Command {
             group: '⚙️ | Settings',
             aliases: ['cp', 'changeprefix'],
             usage: '[prefix]',
-            cooldown: 15,
+            cooldown: 10,
             args: 1
         });
     }
