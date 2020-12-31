@@ -21,7 +21,7 @@ module.exports = class extends Command {
         embed.setTitle('ℹ️ | Points')
         .setDescription([
             '**Points can show you who\'s the chattiest in your server**\n When you send a message, you\'ll get some experience. 😃 Once you have enough experience, you\'ll level up! 🤩 I\'ll even give you a role when you reach certain levels 😏\n',
-            `​\nHere are the settings you can customize for ${this.name} 🛠️\n`,
+            `​\nHere are the settings you can customize for \`${this.name}\`\n`,
             '​'
         ].join(''))
         .setColor(color);
