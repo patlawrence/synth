@@ -4,6 +4,7 @@ const caching_sha2_password = require('mysql2/lib/auth_plugins/caching_sha2_pass
 
 module.exports = mySQL.createConnection({
     user: process.env.USER,
+    host: process.env.HOST,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
     charset: 'utf8mb4_unicode_ci',

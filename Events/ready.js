@@ -103,6 +103,21 @@ module.exports = class extends Event {
             const requiredToCreate = result[0][0].requiredToCreate;
             const requiredToDelete = result[0][0].requiredToDelete;
 
+            console.log(`|${emoji}|`);
+            console.log(typeof emoji);
+
+            console.log(`|${channel}|`);
+            console.log(typeof channel);
+
+            console.log(emoji == 'null');
+            console.log(channel == 'null');
+
+            console.log(typeof emoji == 'null');
+            console.log(typeof channel == 'null');
+
+            console.log(typeof emoji == 'object');
+            console.log(typeof channel == 'object');
+
             client.setHighlightsEmoji(guild.id, emoji);
             client.setHighlightsChannel(guild.id, channel);
             client.setHighlightsRequiredToCreate(guild.id, requiredToCreate);
@@ -119,7 +134,7 @@ module.exports = class extends Event {
         }).catch(err => console.error(err));
 
         const welcomeMessage = new WelcomeMessage();
-        
+
         if(guild.systemChannel)
             welcomeMessage.send(guild.systemChannel);
     }
