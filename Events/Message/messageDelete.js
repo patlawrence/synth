@@ -8,12 +8,14 @@ module.exports = class extends Event {
         const channel = client.getHighlightsChannel(guildID);
         const channels = message.guild.channels;
 
-        var highlightsChannelID;
-        if(channel != null)
-            highlightsChannelID = channel.substring(2, channel.length - 1);
+        if(typeof channel == 'object')
+            return;
+        
+        const highlightsChannelID = channel.substring(2, channel.length - 1);
 
         if(message.channel.id != highlightsChannelID) {
             const highlightsChannel = channels.cache.get(highlightsChannelID);
+            
             const fetchedMessages = await highlightsChannel.messages.fetch({
                 limit: 100
             });
