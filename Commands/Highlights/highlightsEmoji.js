@@ -23,8 +23,8 @@ module.exports = class extends Command {
         args.shift();
 
         if(!args.length) {
-            if(emoji == 'null')
-                this.emojiHasNotBeenSet(message);
+            if(typeof emoji == 'object')
+                return this.emojiHasNotBeenSet(message);
 
             embed.setDescription(`Highlights emoji is currently: ${emoji}`)
             .setColor(color);
@@ -61,7 +61,7 @@ module.exports = class extends Command {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setDescription('❕ | **Highlights emoji has not been set**')
+        embed.setDescription('❕ | \`Highlights emoji has not been set\`')
         .setColor(color);
 
         return message.channel.send(embed);

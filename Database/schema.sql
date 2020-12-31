@@ -30,7 +30,9 @@ CREATE TABLE pointsConfigs (
 
 CREATE TABLE points (
     guildID CHAR(20) NOT NULL,
+    FOREIGN KEY (guildID) REFERENCES configs(guildID),
     userID CHAR(20) NOT NULL,
+    PRIMARY KEY (guildID, userID),
     level TINYINT(3) UNSIGNED DEFAULT 1,
     experience TINYINT(6) UNSIGNED DEFAULT 0
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;

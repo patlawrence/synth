@@ -103,21 +103,6 @@ module.exports = class extends Event {
             const requiredToCreate = result[0][0].requiredToCreate;
             const requiredToDelete = result[0][0].requiredToDelete;
 
-            console.log(`|${emoji}|`);
-            console.log(typeof emoji);
-
-            console.log(`|${channel}|`);
-            console.log(typeof channel);
-
-            console.log(emoji == 'null');
-            console.log(channel == 'null');
-
-            console.log(typeof emoji == 'null');
-            console.log(typeof channel == 'null');
-
-            console.log(typeof emoji == 'object');
-            console.log(typeof channel == 'object');
-
             client.setHighlightsEmoji(guild.id, emoji);
             client.setHighlightsChannel(guild.id, channel);
             client.setHighlightsRequiredToCreate(guild.id, requiredToCreate);
@@ -152,6 +137,19 @@ module.exports = class extends Event {
                         this.deleteGuild(connection, guildID);
                 }
             }).catch(err => console.error(err));
+
+        connection.query('SELECT guildID, userID FROM points')
+        .then(result => {
+            for(var i = 0; i < result[0].length; i++) {
+                const guildID = result[0][i].guildID;
+                const userID = result[0][i].userID;
+
+                const guild = guilds.cache.get(guildID);
+
+                if(!guild.members.cache.has(userID))
+                    this.deleteUser(connection, guildID, userID);
+            }
+        });
     }
 
     deleteGuild(connection, guildID) {
@@ -165,6 +163,11 @@ module.exports = class extends Event {
         .catch(err => console.error(err));
 
         connection.query(`DELETE FROM configs WHERE guildID = '${guildID}'`)
+        .catch(err => console.error(err));
+    }
+
+    deleteUser(connection, guildID, userID) {
+        connection.query(`DELETE FROM points WHERE guildID = '${guildID}' AND userID = '${userID}'`)
         .catch(err => console.error(err));
     }
 }

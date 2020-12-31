@@ -94,12 +94,12 @@ module.exports = class SynthClient extends Client {
     deletePointsLevel(guildID, userID) {
         if(typeof userID == 'undefined')
             return this.points.levels.delete(guildID);
-        return this.getPointsLevel(guildID).delete(messageID);
+        return this.getPointsLevel(guildID).delete(userID);
     }
     deletePointsExperience(guildID, userID) {
         if(typeof userID == 'undefined')
             return this.points.experiences.delete(guildID);
-        return this.getPointsExperience(guildID).delete(messageID);
+        return this.getPointsExperience(guildID).delete(userID);
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

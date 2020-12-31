@@ -5,27 +5,25 @@ module.exports = class PointsManager {
         const client = message.client;
         const guildID = message.guild.id;
         const authorID = message.author.id;
-        const color = client.getColor(guildID);
         const gainRate = client.getPointsGainRate(guildID);
         const doLevelUpAlert = client.getPointsDoLevelUpAlert(guildID);
         const connection = await require('../Database/database.js');
-        const embed = new MessageEmbed();
 
-        if(message.author.bot)
+        if(message.author.bot || message.system)
             return;
 
         if(!this.isUserInCache(message)) {
             client.setPointsLevel(guildID, authorID, 1);
             client.setPointsExperience(guildID, authorID, 0);
 
-            return connection.query(`INSERT INTO points (guildID, userID, level, experience) VALUES('${guildID}', '${authorID}', '1', '0')`)
+            return connection.query(`INSERT INTO points (guildID, userID) VALUES('${guildID}', '${authorID}')`)
             .catch(err => console.error(err));
         }
 
         var level = client.getPointsLevel(guildID, authorID);
         var experience = client.getPointsExperience(guildID, authorID);
 
-        const experienceGained = Math.floor((Math.random() * 10 + 1) * gainRate);
+        const experienceGained = Math.ceil((Math.random() * 9 + 1) * gainRate);
         const experienceNeededToLevelUp = Math.floor(200 * Math.pow(67 / 64, level - 1)); // geometric sequence
 
         var newExperience = experience + experienceGained;

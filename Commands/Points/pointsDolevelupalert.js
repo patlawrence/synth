@@ -23,7 +23,7 @@ module.exports = class extends Command {
         args.shift();
 
         if(!args.length) {
-            embed.setDescription(`Do level up alerts is currently: ${doLevelUpAlert}`)
+            embed.setDescription(`Do level up alert is currently: ${this.toBoolean(doLevelUpAlert)}`)
             .setColor(color);
 
             return message.channel.send(embed);
@@ -49,10 +49,16 @@ module.exports = class extends Command {
         client.setPointsDoLevelUpAlert(guildID, args[0]);
         doLevelUpAlert = client.getPointsDoLevelUpAlert(guildID);
 
-        embed.setDescription(`✅ | **Do level up alerts changed to: ${doLevelUpAlert}**`)
+        embed.setDescription(`✅ | **Do level up alert changed to: ${this.toBoolean(doLevelUpAlert)}**`)
         .setColor(color);
 
 		return message.channel.send(embed);
+    }
+
+    toBoolean(number) {
+        if(number == 1)
+            return true;
+        return false;
     }
 
     doLevelUpAlertNotBoolean(message) {
@@ -61,7 +67,7 @@ module.exports = class extends Command {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setDescription('❌ | **Do Level up alerts must be a boolean value**')
+        embed.setDescription('❌ | **Do Level up alert must be a boolean value**')
         .setColor(color);
 
         return message.channel.send(embed);
@@ -73,7 +79,7 @@ module.exports = class extends Command {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setDescription(`❕ | \`Do level up alerts is already set to: ${args[0]}\``)
+        embed.setDescription(`❕ | \`Do level up alert is already set to: ${this.toBoolean(args[0])}\``)
 		.setColor(color);
 
         return message.channel.send(embed);
