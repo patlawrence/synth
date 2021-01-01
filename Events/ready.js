@@ -21,7 +21,7 @@ module.exports = class extends Event {
             type: 'LISTENING'
         });
 
-        console.info(`Loaded ${commands.size} commands across ${client.guilds.cache.size} servers. logged in as ${user.tag}`);
+        console.info(`Loaded ${commands.size} commands across ${client.guilds.cache.size} servers`);
         console.info(`Ready. Logged in as ${user.tag}`);
     }
 
@@ -94,6 +94,11 @@ module.exports = class extends Event {
 
             client.setPrefix(guild.id, prefix);
             client.setColor(guild.id, color);
+
+            if(guild.systemChannel) {
+                const welcomeMessage = new WelcomeMessage();
+                welcomeMessage.send(guild);
+            }
         }).catch(err => console.error(err));
 
         connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlightsConfigs WHERE guildID = '${guild.id}'`)
@@ -117,11 +122,6 @@ module.exports = class extends Event {
             client.setPointsGainRate(guild.id, gainRate);
             client.setPointsDoLevelUpAlert(guild.id, doLevelUpAlert);
         }).catch(err => console.error(err));
-
-        const welcomeMessage = new WelcomeMessage();
-
-        if(guild.systemChannel)
-            welcomeMessage.send(guild.systemChannel);
     }
 
     cleanDatabase(connection) { // guild is still in database if bot was kicked from server while bot was offline

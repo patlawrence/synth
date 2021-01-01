@@ -63,13 +63,13 @@ module.exports = class SynthClient extends Client {
         return this.points.experiences.get(guildID);
     }
 
-	setCommand(name, command) { this.commands.set(name, command); }
-	setPrefix(guildID, prefix) { this.prefixes.set(guildID, prefix); }
-	setColor(guildID, color) { this.colors.set(guildID, color); }
-	setHighlightsEmoji(guildID, emoji) { this.highlights.emojis.set(guildID, emoji); }
-	setHighlightsChannel(guildID, channel) { this.highlights.channels.set(guildID, channel); }
-	setHighlightsRequiredToCreate(guildID, requiredToCreate) { this.highlights.requiredToCreate.set(guildID, requiredToCreate); }
-	setHighlightsRequiredToDelete(guildID, requiredToDelete) { this.highlights.requiredToDelete.set(guildID, requiredToDelete); }
+	setCommand(name, command) { return this.commands.set(name, command); }
+	setPrefix(guildID, prefix) { return this.prefixes.set(guildID, prefix); }
+	setColor(guildID, color) { return this.colors.set(guildID, color); }
+	setHighlightsEmoji(guildID, emoji) { return this.highlights.emojis.set(guildID, emoji); }
+	setHighlightsChannel(guildID, channel) { return this.highlights.channels.set(guildID, channel); }
+	setHighlightsRequiredToCreate(guildID, requiredToCreate) { return this.highlights.requiredToCreate.set(guildID, requiredToCreate); }
+	setHighlightsRequiredToDelete(guildID, requiredToDelete) { return this.highlights.requiredToDelete.set(guildID, requiredToDelete); }
     setPointsGainRate(guildID, gainRate) { return this.points.gainRates.set(guildID, gainRate); }
     setPointsDoLevelUpAlert(guildID, doLevelUpAlert) { return this.points.doLevelUpAlerts.set(guildID, doLevelUpAlert); }
     setPointsLevel(guildID, userID, level) {

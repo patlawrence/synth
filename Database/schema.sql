@@ -8,8 +8,8 @@ USE synth;
 
 CREATE TABLE configs (
     guildID CHAR(20) NOT NULL PRIMARY KEY,
-    prefix CHAR(47) DEFAULT '!',
-    color CHAR(7) DEFAULT '#FFFFFF'
+    prefix CHAR(47) DEFAULT '-synth',
+    color CHAR(7) DEFAULT '#FC8800'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE highlightsConfigs (

@@ -13,7 +13,8 @@ module.exports = class extends Event {
         const embed = new MessageEmbed();
 
         if(this.isDM(message)) {
-            embed.setDescription('I\'m not built to respond to messages in DMs. 😔 Please talk to me in a server that we\'re both in');
+            embed.setDescription('I\'m not built to respond to messages in DMs. 😔 Please talk to me in a server that we\'re both in')
+            .setColor('#FC8800');
 
             return message.channel.send(embed);
         }

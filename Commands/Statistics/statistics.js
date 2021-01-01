@@ -4,7 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            description: 'Gives data about whatever is specified',
+            description: 'Gives info about statistics commands',
             group: '💡 | Information',
             aliases: ['stats', 's', 'info', 'i'],
             usage: '[command]'
