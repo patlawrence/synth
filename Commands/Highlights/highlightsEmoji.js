@@ -36,7 +36,7 @@ module.exports = class extends Command {
         const guildEmoji = /<:\w{1,22}:\d{17,20}>/;
         const animatedGuildEmoji = /<a:\w{1,22}:\d{17,20}>/;
 
-        if(!(args[0].match(twemoji) || guildEmoji.test(args[0]) || animatedGuildEmoji.test(args[0])))
+        if(!(args[0].test(twemoji) || guildEmoji.test(args[0]) || animatedGuildEmoji.test(args[0])))
            return this.emojiMustBeEmoji(message);
 
         if(args[0] == emoji)

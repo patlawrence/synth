@@ -26,10 +26,21 @@ module.exports = class extends Event {
                 highlightMessage.delete();
         }
 
-        var footer;
-        if(message.embeds[0])
-            footer = message.embeds[0].footer;
+        if(!message.embeds[0])
+            return;
 
+        const embed = message.embeds[0];
+
+        if(!embed.footer)
+            return;
+
+        const footer = message.embeds[0].footer;
+
+        const messageIDAndChannelID = /\d{17,20} \d{17,20}/;
+
+        if(!messageIDAndChannelID.test(footer.text))
+            return;
+        
         const indexOfSpace = footer.text.indexOf(' ');
         const highlightedMessageID = footer.text.substring(0, indexOfSpace);
         const highlightedMessageChannelID = footer.text.substring(indexOfSpace + 1);

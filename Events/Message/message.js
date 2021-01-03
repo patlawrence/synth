@@ -19,7 +19,11 @@ module.exports = class extends Event {
             return message.channel.send(embed);
         }
 
+        if(!message.guild)
+            return;
+
         const guildID = message.guild.id;
+
         const prefix = client.getPrefix(guildID);
         const color = client.getColor(guildID);
 

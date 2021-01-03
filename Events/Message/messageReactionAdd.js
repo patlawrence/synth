@@ -37,6 +37,7 @@ module.exports = class extends Event {
             embed.setAuthor(`@${message.author.tag}`)
             .setThumbnail(message.author.displayAvatarURL())
             .addField(`​\n${message.content}`, `​\n${messageReaction.count} ${emoji} | #${message.channel.name} | [Jump](https://discordapp.com/channels/${guildID}/${message.channel.id}/${message.id})`, true) // there is a zero width character before \n
+            .setImage(message.attachments.first().url)
             .setFooter(`${message.id} ${message.channel.id}`)
             .setTimestamp(message.createdTimestamp)
             .setColor(color);
