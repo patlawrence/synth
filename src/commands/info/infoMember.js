@@ -5,8 +5,8 @@ module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             description: 'Gives data about whatever is specified',
-            group: '💡 | Information',
-            aliases: ['stats', 's', 'info'],
+            group: '💡 | Utilities',
+            aliases: ['m'],
             usage: '[command]'
         });
     }
@@ -18,9 +18,9 @@ module.exports = class extends Command {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setTitle('ℹ️ | Statistics')
+        embed.setTitle('ℹ️ | Info')
         .setDescription([
-            '**Check out this server\'s numbers**\n Displays server, user, and other information 🔢\n',
+            `${args[0]}\n Displays server, user, and other information 🔢\n`,
             `​\nHere's the commands for ${this.name}\n`,
             '​'
         ].join(''))

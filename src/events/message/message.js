@@ -1,6 +1,6 @@
 const Event = require('../../Structures/Event.js');
 const CommandHandler = require('../../Structures/Command/CommandHandler.js');
-const CooldownManager = require('../../Structures/Command/CooldownManager.js');
+const CooldownsManager = require('../../Structures/Command/CooldownsManager.js');
 const PointsManager = require('../../Structures/PointsManager.js');
 const { MessageEmbed } = require('discord.js');
 
@@ -8,10 +8,10 @@ module.exports = class extends Event {
     async run(message) {
         const client = this.client;
         const commandHandler = new CommandHandler();
-        const cooldownManager = new CooldownManager();
+        const cooldownsManager = new CooldownsManager();
         const pointsManager = new PointsManager();
         const embed = new MessageEmbed();
-
+        
         if(this.isDM(message)) {
             embed.setDescription('I\'m not built to respond to messages in DMs. 😔 Please talk to me in a server that we\'re both in')
             .setColor('#FC8800');
@@ -50,10 +50,10 @@ module.exports = class extends Event {
         if(command.args > args.length)
             return this.incorrectNumberOfArgs(message, command);
 
-        if(cooldownManager.isOnCooldown(message, command))
-            return cooldownManager.waitBeforeReuse(message, command);
+        if(cooldownsManager.isOnCooldown(message, command))
+            return cooldownsManager.waitBeforeReuse(message, command);
 
-        cooldownManager.putOnCooldown(message, command);
+        cooldownsManager.putOnCooldown(message, command);
         return command.run(message, args)
         .catch(err => {
             console.error(err);

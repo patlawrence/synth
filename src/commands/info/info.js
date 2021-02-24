@@ -4,9 +4,9 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            description: 'Gives info about statistics commands',
-            group: '💡 | Information',
-            aliases: ['stats', 's', 'info', 'i'],
+            description: 'Gives info about the info command',
+            group: '💡 | Utilities',
+            aliases: ['i', 'stats', 's'],
             usage: '[command]'
         });
     }
@@ -18,9 +18,9 @@ module.exports = class extends Command {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-        embed.setTitle('ℹ️ | Statistics')
+        embed.setTitle('ℹ️ | Info')
         .setDescription([
-            '**Check out this server\'s numbers**\n Displays server, user, and other information 🔢\n',
+            '**Check out this server\'s numbers**\n Displays server, member, and other information 🔢\n',
             `​\nHere's the commands for \`${this.name}\`\n`,
             '​'
         ].join(''))

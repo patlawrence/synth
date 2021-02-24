@@ -6,7 +6,7 @@ module.exports = class extends Command {
         super(...args, {
             description: 'Changes whether I send a message every time a user levels up',
             group: '⚙️ | Settings',
-            aliases: ['levelupalert', 'dlua', 'lua'],
+            aliases: ['levelupalert','levelupmessage', 'dlua', 'lua'],
             usage: '[boolean]',
             cooldown: 10
         });

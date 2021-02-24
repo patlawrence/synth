@@ -6,7 +6,7 @@ module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             description: 'Lists all commands or info about a specific command',
-            group: '💡 | Information',
+            group: '💡 | Utilities',
             aliases: ['h', 'commands', 'cmds', '?'],
             usage: '[command]'
         });

@@ -17,6 +17,9 @@ module.exports = class {
             `​\n#4 - Check \`${prefix} help\` to see other things I can do too`
         ].join(''));
 
+        if(!guild.systemChannel)
+            return;
+
         return guild.systemChannel.send(embed);
     }
 }
