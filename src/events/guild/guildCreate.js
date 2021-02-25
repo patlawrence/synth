@@ -15,7 +15,7 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO pointsConfigs (guildID) VALUES('${guild.id}')`)
             .catch(err => console.error(err));
 
-        connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`)
+        await connection.query(`SELECT prefix, color FROM configs WHERE guildID = '${guild.id}'`) // needs await because welcome message uses these values before they get into cache without await
             .then(result => {
                 const prefix = result[0][0].prefix;
                 const color = result[0][0].color;
