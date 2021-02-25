@@ -95,10 +95,13 @@ module.exports = class extends Event {
                 client.setPrefix(guild.id, prefix);
                 client.setColor(guild.id, color);
 
-                if (guild.systemChannel) {
-                    const welcomeMessage = new WelcomeMessage();
-                    welcomeMessage.send(guild);
-                }
+                const welcomeMessage = new WelcomeMessage();
+
+                if (guild.systemChannel)
+                    welcomeMessage.send(guild.systemChannel);
+                else
+                    welcomeMessage.send(guild.channels.cache.first());
+
             }).catch(err => console.error(err));
 
         connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlightsConfigs WHERE guildID = '${guild.id}'`)

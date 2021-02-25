@@ -48,6 +48,10 @@ module.exports = class extends Event {
             }).catch(err => console.error(err));
 
         const welcomeMessage = new WelcomeMessage();
-        return welcomeMessage.send(guild.systemChannel);
+
+        if (guild.systemChannel)
+            return welcomeMessage.send(guild.systemChannel);
+
+        return welcomeMessage.send(guild.channels.cache.filter(channel => channel.type == 'text').first());
     }
 }

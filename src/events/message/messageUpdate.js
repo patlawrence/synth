@@ -8,13 +8,14 @@ module.exports = class extends Event {
         const color = client.getColor(guildID);
         const emoji = client.getHighlightsEmoji(guildID);
         const channel = client.getHighlightsChannel(guildID);
-        const requiredToDelete = client.getHighlightsRequiredToDelete(guildID);
         const channels = newMessage.guild.channels;
         const embed = new MessageEmbed();
 
-        if (newMessage.partial) { // partial messages are messages not in the cache
+        if (newMessage.partial) // partial messages are messages not in the cache
             newMessage = await newMessage.fetch();
-        }
+
+        if (typeof emoji == 'object')
+            return;
 
         const channelID = channel.substring(2, channel.length - 1);
         const highlightsChannel = channels.cache.get(channelID);

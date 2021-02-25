@@ -28,7 +28,7 @@ module.exports = class extends Event {
         const color = client.getColor(guildID);
 
         if (this.isBotTagged(message)) {
-            embed.setDescription(`**My prefix is currently set to:** ${prefix}`)
+            embed.setDescription(`My prefix is currently set to: ${prefix}`)
                 .setColor(color);
 
             return message.channel.send(embed);
