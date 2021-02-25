@@ -1,21 +1,21 @@
-const Event = require('../../Structures/Event.js');
+const Event = require('../../classes/Event.js');
 
 module.exports = class extends Event {
     async run(guild) {
         const client = this.client;
-        const connection = await require('../../Database/database.js');
+        const connection = await require('../../database/createConnection.js');
 
         connection.query(`DELETE FROM pointsConfigs WHERE guildID = '${guild.id}'`)
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
 
         connection.query(`DELETE FROM points WHERE guildID = '${guild.id}'`)
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
 
         connection.query(`DELETE FROM highlightsConfigs WHERE guildID = '${guild.id}'`)
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
 
         connection.query(`DELETE FROM configs WHERE guildID = '${guild.id}'`)
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
 
         client.deletePrefix(guild.id);
         client.deleteColor(guild.id);

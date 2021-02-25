@@ -1,4 +1,4 @@
-const Command = require('../Structures/Command/Command.js');
+const Command = require('../classes/command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -18,27 +18,27 @@ module.exports = class extends Command {
         const guildID = message.guild.id;
         var prefix = client.getPrefix(guildID);
         const color = client.getColor(guildID);
-        const connection = await require('../Database/database.js');
+        const connection = await require('../database/createConnection.js');
         const embed = new MessageEmbed();
 
         args = args.join(' ');
 
-        if(args.length > 47)
+        if (args.length > 47)
             return this.prefixTooLong(message);
 
-        if(args == prefix)
+        if (args == prefix)
             return this.argsMatchesPrefix(message, args);
 
-		connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`)
-        .catch(err => console.error(err));
+        connection.query(`UPDATE configs SET prefix = '${args}' WHERE guildID = '${guildID}'`)
+            .catch(err => console.error(err));
 
         client.setPrefix(guildID, args)
         prefix = client.getPrefix(guildID);
 
         embed.setDescription(`✅ | **Prefix changed to: ${prefix}**`)
-        .setColor(color);
+            .setColor(color);
 
-		return message.channel.send(embed);
+        return message.channel.send(embed);
     }
 
     prefixTooLong(message) {
@@ -48,7 +48,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription('❌ | **Prefix must be shorter than 47 characters**')
-        .setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }
@@ -60,7 +60,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription(`❕ | \`Prefix is already set to: ${args[0]}\``)
-		.setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }

@@ -1,4 +1,4 @@
-const Command = require('../Structures/Command/Command.js');
+const Command = require('../classes/command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -16,7 +16,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription(`You can add me to your own server [here](https://discord.com/oauth2/authorize?client_id=748988142702297151&scope=bot&permissions=8) 👀`)
-        .setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed)
     }

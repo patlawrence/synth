@@ -7,17 +7,17 @@ module.exports = class PointsManager {
         const authorID = message.author.id;
         const gainRate = client.getPointsGainRate(guildID);
         const doLevelUpAlert = client.getPointsDoLevelUpAlert(guildID);
-        const connection = await require('../Database/database.js');
+        const connection = await require('../database/createConnection.js');
 
-        if(message.author.bot || message.system)
+        if (message.author.bot || message.system)
             return;
 
-        if(!this.isUserInCache(message)) {
+        if (!this.isUserInCache(message)) {
             client.setPointsLevel(guildID, authorID, 1);
             client.setPointsExperience(guildID, authorID, 0);
 
             return connection.query(`INSERT INTO points (guildID, userID) VALUES('${guildID}', '${authorID}')`)
-            .catch(err => console.error(err));
+                .catch(err => console.error(err));
         }
 
         var level = client.getPointsLevel(guildID, authorID);
@@ -30,7 +30,7 @@ module.exports = class PointsManager {
         var newLevel = level;
         var leveledUp = false;
 
-        if(newExperience >= experienceNeededToLevelUp) {
+        if (newExperience >= experienceNeededToLevelUp) {
             newExperience -= experienceNeededToLevelUp;
             newLevel++;
 
@@ -38,7 +38,7 @@ module.exports = class PointsManager {
         }
 
         connection.query(`UPDATE points SET level = '${newLevel}', experience = '${newExperience}' WHERE guildID = '${guildID}' AND userID = '${authorID}'`)
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
 
         client.setPointsLevel(guildID, authorID, newLevel);
         level = client.getPointsLevel(guildID, authorID);
@@ -46,7 +46,7 @@ module.exports = class PointsManager {
         client.setPointsExperience(guildID, authorID, newExperience);
         experience = client.getPointsExperience(guildID, authorID);
 
-        if(leveledUp && doLevelUpAlert)
+        if (leveledUp && doLevelUpAlert)
             this.userLeveledUp(message);
     }
 
@@ -55,7 +55,7 @@ module.exports = class PointsManager {
         const guildID = message.guild.id;
         const authorID = message.author.id;
 
-        if(client.getPointsLevel(guildID).has(authorID) && client.getPointsExperience(guildID).has(authorID))
+        if (client.getPointsLevel(guildID).has(authorID) && client.getPointsExperience(guildID).has(authorID))
             return true;
         return false;
     }
@@ -69,7 +69,7 @@ module.exports = class PointsManager {
         const embed = new MessageEmbed();
 
         embed.setDescription(`🎉 | **Hey ${message.author.tag}! You just leveled up. 🥳 You're now level ${level}**`)
-        .setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }

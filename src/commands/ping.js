@@ -1,4 +1,4 @@
-const Command = require('../Structures/Command/Command.js');
+const Command = require('../classes/command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -17,12 +17,12 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription(`Pinging...`)
-        .setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed)
-        .then(reply => {
-            embed.setDescription(`✅ | **Ping: ${reply.createdTimestamp - message.createdTimestamp} ms**`);
-            reply.edit(embed);
-        });
+            .then(reply => {
+                embed.setDescription(`✅ | **Ping: ${reply.createdTimestamp - message.createdTimestamp} ms**`);
+                reply.edit(embed);
+            });
     }
 }

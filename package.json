@@ -3,15 +3,13 @@
   "version": "0.0.1",
   "description": "A simple Discord bot",
   "main": "index.js",
-  "scripts": {
-    "start": "nodemon ./index.js"
-  },
   "author": "Patrick Lawrence",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.3.1",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "glob": "^7.1.6",
-    "mysql2": "^2.1.0"
+    "mysql2": "^2.2.5",
+    "nodemon": "^2.0.7"
   }
 }

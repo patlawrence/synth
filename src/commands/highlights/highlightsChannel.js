@@ -17,7 +17,7 @@ module.exports = class extends Command {
         const guildID = message.guild.id;
         const color = client.getColor(guildID);
         var channel = client.getHighlightsChannel(guildID);
-        const connection = await require('../../database/connection.js');
+        const connection = await require('../../database/createConnection.js');
         const embed = new MessageEmbed();
 
         args.shift();

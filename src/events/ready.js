@@ -1,5 +1,5 @@
-const Event = require('../Structures/Event.js');
-const WelcomeMessage = require('../Structures/WelcomeMessage.js');
+const Event = require('../classes/Event.js');
+const WelcomeMessage = require('../classes/WelcomeMessage.js');
 
 module.exports = class extends Event {
     constructor(...args) {
@@ -12,7 +12,7 @@ module.exports = class extends Event {
         const client = this.client;
         const commands = client.commands;
         const user = client.user;
-        const connection = await require('../database/connection.js');
+        const connection = await require('../database/createConnection.js');
 
         this.fillCaches(connection);
         this.cleanDatabase(connection);

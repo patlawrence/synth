@@ -1,7 +1,7 @@
-const Event = require('../../Structures/Event.js');
-const CommandHandler = require('../../Structures/Command/CommandHandler.js');
-const CooldownsManager = require('../../Structures/Command/CooldownsManager.js');
-const PointsManager = require('../../Structures/PointsManager.js');
+const Event = require('../../classes/Event.js');
+const CommandHandler = require('../../classes/command/CommandHandler.js');
+const CooldownsManager = require('../../classes/command/CooldownsManager.js');
+const PointsManager = require('../../classes/PointsManager.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Event {
@@ -11,15 +11,15 @@ module.exports = class extends Event {
         const cooldownsManager = new CooldownsManager();
         const pointsManager = new PointsManager();
         const embed = new MessageEmbed();
-        
-        if(this.isDM(message)) {
+
+        if (this.isDM(message)) {
             embed.setDescription('I\'m not built to respond to messages in DMs. 😔 Please talk to me in a server that we\'re both in')
-            .setColor('#FC8800');
+                .setColor('#FC8800');
 
             return message.channel.send(embed);
         }
 
-        if(!message.guild)
+        if (!message.guild)
             return;
 
         const guildID = message.guild.id;
@@ -27,14 +27,14 @@ module.exports = class extends Event {
         const prefix = client.getPrefix(guildID);
         const color = client.getColor(guildID);
 
-        if(this.isBotTagged(message)) {
+        if (this.isBotTagged(message)) {
             embed.setDescription(`**My prefix is currently set to:** ${prefix}`)
-            .setColor(color);
+                .setColor(color);
 
             return message.channel.send(embed);
         }
 
-        if(!this.isMessageACommand(message)) {
+        if (!this.isMessageACommand(message)) {
             return pointsManager.addPoints(message);
         }
 
@@ -42,23 +42,23 @@ module.exports = class extends Event {
 
         const command = commandHandler.handle(message, args);
 
-        if(!command)
+        if (!command)
             return commandHandler.doNotUnderstand(message);
 
         args.shift();
 
-        if(command.args > args.length)
+        if (command.args > args.length)
             return this.incorrectNumberOfArgs(message, command);
 
-        if(cooldownsManager.isOnCooldown(message, command))
+        if (cooldownsManager.isOnCooldown(message, command))
             return cooldownsManager.waitBeforeReuse(message, command);
 
         cooldownsManager.putOnCooldown(message, command);
         return command.run(message, args)
-        .catch(err => {
-            console.error(err);
-            return this.errorRunning(message, command);
-        });
+            .catch(err => {
+                console.error(err);
+                return this.errorRunning(message, command);
+            });
     }
 
     getArgs(message) {
@@ -69,10 +69,10 @@ module.exports = class extends Event {
 
         var args = content.slice(prefix.length);
 
-		if(!args)
-			return [''];
+        if (!args)
+            return [''];
 
-		args = args.trim();
+        args = args.trim();
 
         return args.split(/ +/);
     }
@@ -84,7 +84,7 @@ module.exports = class extends Event {
         const content = message.content;
         const author = message.author;
 
-        if(content.startsWith(prefix) && !author.bot)
+        if (content.startsWith(prefix) && !author.bot)
             return true;
 
         return false;
@@ -95,7 +95,7 @@ module.exports = class extends Event {
         const userID = client.user.id;
         const content = message.content;
 
-        if(content == `<@!${userID}>`)
+        if (content == `<@!${userID}>`)
             return true;
 
         return false;
@@ -104,7 +104,7 @@ module.exports = class extends Event {
     isDM(message) {
         const author = message.author;
 
-        if(message.channel.type == 'dm' && !author.bot)
+        if (message.channel.type == 'dm' && !author.bot)
             return true;
 
         return false;
@@ -117,26 +117,26 @@ module.exports = class extends Event {
         const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
-		var description = '📋 | **Incorrect number of arguments**\n';
+        var description = '📋 | **Incorrect number of arguments**\n';
 
-		if (command.usage)
+        if (command.usage)
             description += `​\n❕ | Usage: ${prefix}${command.name} ${command.usage}`;
 
-		embed.setDescription(description)
-		.setColor(color);
+        embed.setDescription(description)
+            .setColor(color);
 
-		return message.channel.send(embed);
+        return message.channel.send(embed);
     }
 
     errorRunning(message, command) {
         const client = message.client;
         const guildID = message.guild.id;
         const prefix = client.getPrefix(guildID);
-		const color = client.getColor(guildID);
+        const color = client.getColor(guildID);
         const embed = new MessageEmbed();
 
         embed.setDescription(`❗ | **Error running ${prefix}${command.name}**`)
-		.setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }

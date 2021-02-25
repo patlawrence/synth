@@ -1,4 +1,4 @@
-const Command = require('../Structures/Command/Command.js');
+const Command = require('../classes/command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -16,37 +16,37 @@ module.exports = class extends Command {
         const client = this.client;
         const guildID = message.guild.id;
         var color = client.getColor(guildID);
-        const connection = await require('../Database/database.js');
+        const connection = await require('../database/createConnection.js');
         const embed = new MessageEmbed();
 
-		if(!args.length) {
+        if (!args.length) {
             embed.setDescription(`Embed message color is currently: ${color}`)
-            .setColor(color);
+                .setColor(color);
 
-			return message.channel.send(embed);
+            return message.channel.send(embed);
         }
 
-        if(!args[0].includes('#'))
+        if (!args[0].includes('#'))
             args[0] = `#${args[0]}`;
 
         const hexCode = /#[A-Fa-f0-9]{6}/;
 
-        if(!hexCode.test(args[0]))
+        if (!hexCode.test(args[0]))
             return this.colorMustBeHexCode(message);
 
-        if(args[0] == color)
+        if (args[0] == color)
             return this.argsMatchesColor(message, args);
 
-		connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildID = '${guildID}'`)
-        .catch(err => console.error(err));
+        connection.query(`UPDATE configs SET color = '${args[0]}' WHERE guildID = '${guildID}'`)
+            .catch(err => console.error(err));
 
         client.setColor(guildID, args[0]);
         color = client.getColor(guildID);
 
         embed.setDescription(`✅ | **Embed message color changed to ${color}**`)
-        .setColor(color);
+            .setColor(color);
 
-		return message.channel.send(embed);
+        return message.channel.send(embed);
     }
 
     colorMustBeHexCode(message) {
@@ -56,7 +56,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription('❌ | **Color must be a hex code value**')
-        .setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }
@@ -68,7 +68,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription(`❕ | \`Color is already set to: ${args[0]}\``)
-		.setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }

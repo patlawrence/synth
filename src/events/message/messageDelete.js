@@ -1,4 +1,4 @@
-const Event = require('../../classes/Event.js.js');
+const Event = require('../../classes/Event.js');
 
 module.exports = class extends Event {
     async run(message) {

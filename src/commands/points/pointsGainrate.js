@@ -1,4 +1,4 @@
-const Command = require('../../Structures/Command/Command.js');
+const Command = require('../../classes/command/Command.js');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
@@ -17,34 +17,34 @@ module.exports = class extends Command {
         const guildID = message.guild.id;
         const color = client.getColor(guildID);
         var gainRate = client.getPointsGainRate(guildID);
-        const connection = await require('../../Database/database.js');
+        const connection = await require('../../database/createConnection.js');
         const embed = new MessageEmbed();
 
         args.shift();
 
-        if(!args.length) {
+        if (!args.length) {
             embed.setDescription(`The rate users gain levels is currently: ${gainRate}`)
-            .setColor(color);
+                .setColor(color);
 
             return message.channel.send(embed);
         }
 
-        if(args[0] <= 0 && args[0] >= 10)
+        if (args[0] <= 0 && args[0] >= 10)
             return this.gainRateNotInRange(message);
 
-        if(args[0] == gainRate)
+        if (args[0] == gainRate)
             return this.argsMatchesGainRate(message, args);
 
         connection.query(`UPDATE pointsConfigs SET gainRate = '${args[0]}' WHERE guildID = '${guildID}'`)
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
 
         client.setPointsGainRate(guildID, args[0]);
         gainRate = client.getPointsGainRate(guildID);
 
         embed.setDescription(`✅ | **The rate users gain levels changed to: ${gainRate}**`)
-        .setColor(color);
+            .setColor(color);
 
-		return message.channel.send(embed);
+        return message.channel.send(embed);
     }
 
     gainRateNotInRange(message) {
@@ -54,7 +54,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription('❌ | **The rate users gain levels must be less than 10**')
-        .setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }
@@ -66,7 +66,7 @@ module.exports = class extends Command {
         const embed = new MessageEmbed();
 
         embed.setDescription(`❕ | \`The rate users gain levels is already set to: ${args[0]}\``)
-		.setColor(color);
+            .setColor(color);
 
         return message.channel.send(embed);
     }
