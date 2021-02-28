@@ -17,7 +17,7 @@ module.exports = class extends Event {
         this.fillCaches(connection);
         this.cleanDatabase(connection);
 
-        user.setActivity('commands', {
+        user.setActivity('synth-bot.com', {
             type: 'LISTENING'
         });
 
@@ -81,7 +81,7 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO configs (guildID) VALUES('${guild.id}')`)
             .catch(err => console.error(err));
 
-        connection.query(`INSERT INTO highlightsConfigs (guildID) VALUES('${guild.id}')`)
+        connection.query(`INSERT INTO highlightsConfigs (guildID, emoji, channel) VALUES('${guild.id}', '❤️', '${guild.channels.cache.filter(channel => channel.type == 'text').first()}')`) // add highlights emoji and default highlights channel. For some reason the ❤️ emoji can't be stored in the database as a default value
             .catch(err => console.error(err));
 
         connection.query(`INSERT INTO pointsConfigs (guildID) VALUES('${guild.id}')`)
@@ -97,11 +97,7 @@ module.exports = class extends Event {
 
                 const welcomeMessage = new WelcomeMessage();
 
-                if (guild.systemChannel)
-                    welcomeMessage.send(guild.systemChannel);
-                else
-                    welcomeMessage.send(guild.channels.cache.first());
-
+                welcomeMessage.send(guild);
             }).catch(err => console.error(err));
 
         connection.query(`SELECT emoji, channel, requiredToCreate, requiredToDelete FROM highlightsConfigs WHERE guildID = '${guild.id}'`)

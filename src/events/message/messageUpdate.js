@@ -14,7 +14,10 @@ module.exports = class extends Event {
         if (newMessage.partial) // partial messages are messages not in the cache
             newMessage = await newMessage.fetch();
 
-        if (typeof emoji == 'object')
+        if (newMessage.author.bot)
+            return;
+
+        if (typeof emoji == 'object' || typeof channel == 'object')
             return;
 
         const channelID = channel.substring(2, channel.length - 1);
@@ -23,7 +26,7 @@ module.exports = class extends Event {
             limit: 100
         });
 
-        const highlightMessage = fetchedMessages.find(fetchedMessage => fetchedMessage.embeds.length === 1 ? (fetchedMessage.embeds[0].footer.text.startsWith(newMessage.id) ? true : false) : false); // allows us to delete/edit a highlighted message with up to date information
+        const highlightMessage = fetchedMessages.find(fetchedMessage => fetchedMessage.embeds.length === 1 ? (fetchedMessage.embeds[0].footer ? (fetchedMessage.embeds[0].footer.text.startsWith(newMessage.id) ? true : false) : false) : false); // allows us to delete/edit a highlighted message with up to date information
 
         if (highlightMessage) {
             const indexOfSpace = highlightMessage.embeds[0].fields[0].value.indexOf(' ');

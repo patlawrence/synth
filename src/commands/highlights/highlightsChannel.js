@@ -23,9 +23,6 @@ module.exports = class extends Command {
         args.shift();
 
         if (!args.length) {
-            if (typeof channel == 'object')
-                return this.channelHasNotBeenSet(message);
-
             embed.setDescription(`Highlights channel is currently: ${channel}`)
                 .setColor(color);
 
@@ -47,18 +44,6 @@ module.exports = class extends Command {
         channel = client.getHighlightsChannel(guildID);
 
         embed.setDescription(`✅ | **Highlights channel changed to:** ${channel}`)
-            .setColor(color);
-
-        return message.channel.send(embed);
-    }
-
-    channelHasNotBeenSet(message) {
-        const client = message.client;
-        const guildID = message.guild.id;
-        const color = client.getColor(guildID);
-        const embed = new MessageEmbed();
-
-        embed.setDescription('❕ | \`Highlights channel has not been set\`')
             .setColor(color);
 
         return message.channel.send(embed);

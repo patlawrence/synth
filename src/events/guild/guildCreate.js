@@ -9,7 +9,7 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO configs (guildID) VALUES('${guild.id}')`)
             .catch(err => console.error(err));
 
-        connection.query(`INSERT INTO highlightsConfigs (guildID) VALUES('${guild.id}')`)
+        connection.query(`INSERT INTO highlightsConfigs (guildID, emoji, channel) VALUES('${guild.id}', '❤️', '${guild.channels.cache.filter(channel => channel.type == 'text').first()}')`)
             .catch(err => console.error(err));
 
         connection.query(`INSERT INTO pointsConfigs (guildID) VALUES('${guild.id}')`)
@@ -49,9 +49,6 @@ module.exports = class extends Event {
 
         const welcomeMessage = new WelcomeMessage();
 
-        if (guild.systemChannel)
-            return welcomeMessage.send(guild.systemChannel);
-
-        return welcomeMessage.send(guild.channels.cache.filter(channel => channel.type == 'text').first());
+        welcomeMessage.send(guild);
     }
 }

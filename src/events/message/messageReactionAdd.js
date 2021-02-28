@@ -26,13 +26,16 @@ module.exports = class extends Event {
             if (messageReaction.count < requiredToCreate)
                 return;
 
+            if (typeof emoji == 'object')
+                return;
+
             const channelID = channel.substring(2, channel.length - 1);
             const highlightsChannel = channels.cache.get(channelID);
             const fetchedMessages = await highlightsChannel.messages.fetch({
                 limit: 100
             });
 
-            const highlightMessage = fetchedMessages.find(fetchedMessage => fetchedMessage.embeds.length === 1 ? (fetchedMessage.embeds[0].footer.text.startsWith(message.id) ? true : false) : false); // allows us to delete/edit a highlighted message with up to date information
+            const highlightMessage = fetchedMessages.find(fetchedMessage => fetchedMessage.embeds.length === 1 ? (fetchedMessage.embeds[0].footer ? (fetchedMessage.embeds[0].footer.text.startsWith(message.id) ? true : false) : false) : false); // allows us to delete/edit a highlighted message with up to date information
 
             embed.setAuthor(`@${message.author.tag}`)
                 .setThumbnail(message.author.displayAvatarURL())

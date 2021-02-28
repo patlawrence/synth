@@ -1,7 +1,23 @@
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class {
-    async send(channel) {
+    async send(guild) {
+        var channel
+
+        if (guild.systemChannel)
+            channel = guild.systemChannel;
+        else {
+            channel = guild.channels.cache.filter(channel => channel.type == 'text').first();
+
+            if (!channel) {
+                channel = await guild.channels.create('synth', {
+                    type: 'text',
+                    topic: 'Since there were\'t any text channels in this server, I made one for you! You can delete this channel if you want.',
+                    reason: 'Needed to create a channel for Synth to send the welcome message and send highlights in'
+                });
+            }
+        }
+
         const client = channel.client;
         const guildID = channel.guild.id;
         const prefix = client.getPrefix(guildID);

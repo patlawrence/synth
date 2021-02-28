@@ -48,7 +48,7 @@ module.exports = class extends Command {
 
         if (requiredToDelete >= requiredToCreate) {
             connection.query(`UPDATE highlightsConfigs SET requiredToDelete = '${args[0] - 1}' WHERE guildID = '${guildID}'`)
-                .catch(err => console.log(err));
+                .catch(err => console.error(err));
 
             client.setHighlightsRequiredToDelete(guildID, args[0] - 1);
             requiredToDelete = client.getHighlightsRequiredToDelete(guildID);

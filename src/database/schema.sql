@@ -1,6 +1,6 @@
 CREATE DATABASE synth DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
 
-CREATE USER ubuntu@localhost IDENTIFIED BY 'password';
+CREATE USER ubuntu@localhost IDENTIFIED BY 'your_password_here';
 
 GRANT SELECT, INSERT, UPDATE, DELETE, ALTER ON synth.* TO ubuntu@localhost;
 
@@ -25,7 +25,7 @@ CREATE TABLE pointsConfigs (
     guildID CHAR(20) NOT NULL,
     FOREIGN KEY (guildID) REFERENCES configs(guildID),
     gainRate FLOAT(3, 2) DEFAULT 1,
-    doLevelUpAlert BOOLEAN DEFAULT 0
+    doLevelUpAlert BOOLEAN DEFAULT 1
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE points (
