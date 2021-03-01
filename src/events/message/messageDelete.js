@@ -20,7 +20,7 @@ module.exports = class extends Event {
                 limit: 100
             });
 
-            const highlightMessage = fetchedMessages.find(fetchedMessage => fetchedMessage.embeds.length === 1 ? (fetchedMessage.embeds[0].footer.text.startsWith(message.id) ? true : false) : false);
+            const highlightMessage = fetchedMessages.find(fetchedMessage => fetchedMessage.embeds.length === 1 ? (fetchedMessage.embeds[0].footer ? (fetchedMessage.embeds[0].footer.text.startsWith(message.id) ? true : false) : false) : false); // allows us to delete/edit a highlighted message with up to date information
 
             if (highlightMessage)
                 highlightMessage.delete();

@@ -9,7 +9,7 @@ module.exports = class extends Event {
         connection.query(`INSERT INTO configs (guildID) VALUES('${guild.id}')`)
             .catch(err => console.error(err));
 
-        connection.query(`INSERT INTO highlightsConfigs (guildID, emoji, channel) VALUES('${guild.id}', '❤️', '${guild.channels.cache.filter(channel => channel.type == 'text').first()}')`)
+        await connection.query(`INSERT INTO highlightsConfigs (guildID, emoji, channel) VALUES('${guild.id}', '❤️', '${guild.channels.cache.filter(channel => channel.type == 'text').first()}')`) // needs await for when bot joins server and there are no channels. Welcome message makes a channel, and then highlights channel is set to that channel
             .catch(err => console.error(err));
 
         connection.query(`INSERT INTO pointsConfigs (guildID) VALUES('${guild.id}')`)

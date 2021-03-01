@@ -2,8 +2,9 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = class {
     async send(guild) {
-        var channel
+        const connection = await require('../database/createConnection.js');
 
+        var channel
         if (guild.systemChannel)
             channel = guild.systemChannel;
         else {
@@ -15,6 +16,16 @@ module.exports = class {
                     topic: 'Since there were\'t any text channels in this server, I made one for you! You can delete this channel if you want.',
                     reason: 'Needed to create a channel for Synth to send the welcome message and send highlights in'
                 });
+
+                connection.query(`UPDATE highlightsConfigs SET channel = '${channel}' WHERE guildID = '${guild.id}'`)
+                    .catch(err => console.error(err));
+
+                connection.query(`SELECT channel FROM highlightsConfigs WHERE guildID = '${guild.id}'`)
+                    .then(result => {
+                        const channel = result[0][0].channel;
+
+                        client.setHighlightsChannel(guild.id, channel);
+                    }).catch(err => console.error(err));
             }
         }
 

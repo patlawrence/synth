@@ -12,7 +12,7 @@ module.exports = class PointsManager {
         if (message.author.bot || message.system)
             return;
 
-        if (!this.isUserInCache(message)) {
+        if (!this.isMemberInCache(message)) {
             client.setPointsLevel(guildID, authorID, 1);
             client.setPointsExperience(guildID, authorID, 0);
 
@@ -47,10 +47,10 @@ module.exports = class PointsManager {
         experience = client.getPointsExperience(guildID, authorID);
 
         if (leveledUp && doLevelUpAlert)
-            this.userLeveledUp(message);
+            this.memberLeveledUp(message);
     }
 
-    isUserInCache(message) {
+    isMemberInCache(message) {
         const client = message.client;
         const guildID = message.guild.id;
         const authorID = message.author.id;
@@ -60,7 +60,7 @@ module.exports = class PointsManager {
         return false;
     }
 
-    userLeveledUp(message) {
+    memberLeveledUp(message) {
         const client = message.client;
         const guildID = message.guild.id;
         const authorID = message.author.id;
