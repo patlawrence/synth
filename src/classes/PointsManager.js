@@ -23,6 +23,9 @@ module.exports = class PointsManager {
         var level = client.getPointsLevel(guildID, authorID);
         var experience = client.getPointsExperience(guildID, authorID);
 
+        if (level >= 248) // max level user can have before the bot stops adding experience
+            return;
+
         const experienceGained = Math.ceil((Math.random() * 9 + 1) * gainRate);
         const experienceNeededToLevelUp = Math.floor(200 * Math.pow(67 / 64, level - 1)); // geometric sequence
 
@@ -46,8 +49,9 @@ module.exports = class PointsManager {
         client.setPointsExperience(guildID, authorID, newExperience);
         experience = client.getPointsExperience(guildID, authorID);
 
-        if (leveledUp && doLevelUpAlert)
-            this.memberLeveledUp(message);
+        if (leveledUp && !!doLevelUpAlert)
+            return this.memberLeveledUp(message);
+        return;
     }
 
     isMemberInCache(message) {
@@ -68,7 +72,7 @@ module.exports = class PointsManager {
         const level = client.getPointsLevel(guildID, authorID);
         const embed = new MessageEmbed();
 
-        embed.setDescription(`🎉 | **Hey ${message.author.tag}! You just leveled up. 🥳 You're now level ${level}**`)
+        embed.setDescription(`🎉 | **Hey** <@${message.author.id}>**! You just leveled up. 🥳 You're now level ${level}**`)
             .setColor(color);
 
         return message.channel.send(embed);

@@ -34,11 +34,11 @@ module.exports = class extends Command {
         if (!boolean.test(args[0]))
             return this.doLevelUpAlertNotBoolean(message);
 
-        if (args[0] == 'true')
-            args[0] = '1';
+        if (args[0] == 'true' || args[0] == '1')
+            args[0] = 1;
 
-        if (args[0] == 'false')
-            args[0] = '0';
+        if (args[0] == 'false' || args[0] == '0')
+            args[0] = 0;
 
         if (args[0] === doLevelUpAlert)
             return this.argsMatchesDoLevelUpAlert(message, args);

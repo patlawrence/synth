@@ -34,7 +34,7 @@ CREATE TABLE points (
     userID CHAR(20) NOT NULL,
     PRIMARY KEY (guildID, userID),
     level TINYINT(3) UNSIGNED DEFAULT 1,
-    experience TINYINT(6) UNSIGNED DEFAULT 0
+    experience INT(8) UNSIGNED DEFAULT 0
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE pointsRoles (
