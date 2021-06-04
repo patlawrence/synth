@@ -6,7 +6,7 @@ module.exports = class extends Command {
         super(...args, {
             description: 'Gives info about the info command',
             group: '💡 | Utilities',
-            aliases: ['i', 'stats', 's'],
+            aliases: ['i', 'statistics', 'stats', 's'],
             usage: '[command]'
         });
     }

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mySQL = require('mysql2/promise'); // mysql client that focuses on performance. Also supports promises
 
-module.exports = mySQL.createConnection({
+module.exports = mySQL.createPool({
     user: process.env.USER,
     host: process.env.HOST,
     password: process.env.PASSWORD,

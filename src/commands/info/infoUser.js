@@ -114,12 +114,7 @@ module.exports = class extends Command {
                 ageString += 's';
         }
 
-        console.log(user.createdTimestamp);
-        console.log(String(user.createdTimestamp));
-        console.log(user.createdAt);
-        const userCreatedTime = SnowflakeUtil.deconstruct(String(user.createdAt.toString()));
-
-        embed.addField('👶 | Age', `${ageString} ${userCreatedTime}`, true);
+        embed.addField('👶 | Age', `${ageString}`, true);
 
         return message.channel.send(embed);
     }
