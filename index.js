@@ -1,4 +1,4 @@
-const SynthClient = require('./Structures/SynthClient.js');
+const SynthClient = require('./src/classes/SynthClient.js');
 require('dotenv').config(); // library that allows storage of environment variables in a .env file
 
 const client = new SynthClient();
