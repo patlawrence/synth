@@ -17,7 +17,7 @@ module.exports = class extends Event {
         this.fillCaches(connection);
         this.cleanDatabase(connection);
 
-        user.setActivity('synth-bot.com', {
+        user.setActivity('patrickjameslawrence.com', {
             type: 'LISTENING'
         });
 

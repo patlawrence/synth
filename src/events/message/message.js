@@ -91,11 +91,10 @@ module.exports = class extends Event {
     }
 
     isBotTagged(message) {
-        const client = this.client;
-        const userID = client.user.id;
         const content = message.content;
+        console.log(this.client);
 
-        if (content == `<@!${userID}>`)
+        if (content == `@Synth#2787` || content == `@Synth@2787 `)
             return true;
 
         return false;
